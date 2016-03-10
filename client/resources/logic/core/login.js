@@ -21,9 +21,9 @@ var Login = function(){
         modules.socket.sendMessage(msg);
 	}
 	
-    this.handleLogin = function(success) {
+    this.displayAttemptResult = function(success) {
         if(success) {
-            changePage("editor");
+            changePage("project-manager");
         }
         else {
             $("#login-password").val("");
@@ -43,4 +43,13 @@ var Login = function(){
 			$("#login-sign-up").text("Sign up");
 		}
 	}
+    
+    // Handle sockets messages
+    this.handleMessage = function(message) {
+        switch(message.type) {
+            case "login-attempt":
+                modules.login.displayAttemptResult(message.data);
+                break;
+        }
+    };
 };

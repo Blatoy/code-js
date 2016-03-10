@@ -1,4 +1,3 @@
-
 var Connecting = function(){
 	this.init = function() {
         $("#connection-retry").hide();
@@ -18,8 +17,9 @@ var Connecting = function(){
             $("#connection-text").text("Connection lost");
 
 	};
-	
-	this.login = function() {
-		
-	}
+
+    // Handle sockets messages
+    this.handleMessage = function(message) {
+        
+    };
 };

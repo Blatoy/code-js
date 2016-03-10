@@ -14,7 +14,7 @@ module.exports = function() {
 	};
 	
 	this.handleMessage = function(message, client) {
-        log("["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
+        log("["+ controller.userController.getUser(client).getDebugName() +"] ["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
         var messageType = message.type.split(":");
         message.type = messageType[1];
          
@@ -22,6 +22,13 @@ module.exports = function() {
 			case "login":
                 cores.login.handleMessage(message, client);
 				break;
+            case "global":
+                switch(message.type) {
+                    case "pong":
+                        controller.userController.getUser(client).handlePong();
+                        break;
+                }
+                break;
 		}
 	}
 	
@@ -32,12 +39,5 @@ module.exports = function() {
 	};
 	
 	this.broadcast = function() {
-	};
-	this.parse = function(message) {
-		
-	};
-	this.createClient = function() {
-	};
-	this.handle = function() {
 	};
 };

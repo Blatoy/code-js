@@ -1,5 +1,8 @@
+// Socket.js (class) (client)
+// Handle sockets related things
+
 var Socket = function() {
-	this.ws = "test";
+	this.ws;
 	this.lastReadyState = -1;
     this.hasConnectionSucceed = false;
     this.isConnected = false;
@@ -9,15 +12,9 @@ var Socket = function() {
 	};
 	
 	this.handleStateChange = function() {
-		/*
-			0: connecting
-			1: connection ok
-			2: request received
-            3: error
-		*/
-
 		if(!this.ws || this.lastReadyState == this.ws.readyState)
 			return;
+
 		switch(this.ws.readyState) {
 			case 0:
 				break;
@@ -38,16 +35,32 @@ var Socket = function() {
 		}
 		
 		this.lastReadyState = this.ws.readyState;
-        };
+    };
 	
 	this.handleMessage = function(message) {
 		var msg = new Message();
         msg.fromJSON(message.data);
-
-		switch(msg.type) {
-			case "login-attempt":
-                modules.login.handleLogin(msg.data);
+        
+        var messageType = msg.type.split(":");
+        msg.type = messageType[1];
+         
+        
+		switch (messageType[0]) {
+			case "login":
+                modules.login.handleMessage(msg);
 				break;
+            case "connecting":
+                modules.connecting.handleMessage(msg);
+                break;
+            case "global":
+                switch(msg.type) {
+                    case "ping":
+                        var message = new Message();
+                        message.fromVal("global:pong", "pong")
+                        this.sendMessage(message);
+                        break;
+                }
+                break;
 		}
 	};
 	

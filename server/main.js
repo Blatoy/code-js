@@ -1,6 +1,6 @@
 // main.js (server)
 // Initialize server, creates objects and connects to database
-var startTime = new Date().getTime();
+global.startTime = new Date().getTime();
 
 "use strict";
 // Global variables
@@ -64,15 +64,11 @@ function init() {
 		// Listening for any message
 		client.on("message", function(data) {
 			var message = new modules.classes.Message(JSON.parse(data));
-
 			socket.handleMessage(message, client);
 		});
-		
-		// var message = socket.parse(data);
-		// socket.handle(message);
 	});
 
-    log("Server ready [" + ((new Date().getTime()) - startTime) + "ms]", "info");
+    log("Server ready [" + ((new Date().getTime()) - global.startTime) + "ms]", "info");
  
     inputHandler.init();
  

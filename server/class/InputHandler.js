@@ -13,19 +13,20 @@ module.exports = function(client, clientId) {
             help: "Display this help",
             action: function(){
                 for(key in commandList) {
-                    log("- " + key + (" ").repeat(10 - key.length) + commandList[key].help, "info", "InputHandler.js");
+                    log(key + (" ").repeat(10 - key.length) + commandList[key].help, "info", "InputHandler.js");
                 }
             }
         },
         userlist: {
             help: "Display current users",
             action: function(){
-                log("CID   UID   Username", "info", "InputHandler.js");
+                log("CID   UID   Username    Ping", "info", "InputHandler.js");
                 for(key in controller.userController.users) {
                     log(
                         pad(controller.userController.users[key].clientId, 5) + " " +
                         pad(controller.userController.users[key].userId, 5) + " " +
-                        controller.userController.users[key].username
+                        pad(controller.userController.users[key].username, 11) + " " +
+                        controller.userController.users[key].userPing + "ms"
                         , "info", "InputHandler.js");
                 }
             }
@@ -34,6 +35,14 @@ module.exports = function(client, clientId) {
             help: "Stop the server",
             action: function(){
                 process.exit();
+            }
+        },
+        about: {
+            help: "Give informations",
+            action: function(){
+                log("CodeJS server version " + modules.config.global.version, "info", "InputHandler.js");
+                log("Made by 4HIN / CIFOM-ET 2015-2016 ", "info", "InputHandler.js");
+                log("Server uptime: " + (new Date().getTime() - global.startTime) + "ms", "info", "InputHandler.js");
             }
         },
         cls: {
