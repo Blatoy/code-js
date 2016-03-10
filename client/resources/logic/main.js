@@ -1,3 +1,8 @@
+// main.js (client)
+// handle the initialisation of the program
+
+"use strict";
+
 var modules = {};
 var currentPage;
 

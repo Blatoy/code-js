@@ -1,12 +1,16 @@
-// main.js
+// main.js (server)
 // Initialize server, creates objects and connects to database
+var startTime = new Date().getTime();
 
+"use strict";
 // Global variables
 global.modules = {core:{}, classes:{}, config:{}};
+global.cores = {};
 global.controller;
 global.socket;
 global.database;
 global.tables;
+
 
 // INITIALISATION
 function init() {
@@ -18,28 +22,29 @@ function init() {
 	// Include all files
 	includeLogic();
     
-    log("Creating websocket...", "debug");
+    log("Initializing websocket", "debug");
     
 	// Create socket
-	socket = new modules.classes.Socket();
-	socket.init(modules.config.global.websocket.port);
+	global.socket = new modules.classes.Socket();
+	global.socket.init(modules.config.global.websocket.port);
 	
-    log("Done.", "debug");
     log("Connecting to the database", "debug");
 
 	// Connection to database
-	database = new modules.classes.Database(modules.config.database.path);
-	database.init();	
-    tables = modules.config.database.tables;
+	global.database = new modules.classes.Database(modules.config.database.path);
+	global.database.init();	
+    global.tables = modules.config.database.tables;
 
-    log("Done.", "debug");
-
-    log("Creating the controller.", "debug");
+    log("Initializing controllers", "debug");
 	
 	// Create controller
-	controller = new modules.classes.Controller(new modules.classes.UserController(database, tables), new modules.classes.FileController(), new modules.classes.ProjectController());
-			
-    log("Done.", "debug");
+	global.controller = new modules.classes.Controller(new modules.classes.UserController(database, tables), new modules.classes.FileController(), new modules.classes.ProjectController());
+   
+    // Load cores
+    log("Initializing core files", "debug");
+    global.cores.login = new modules.core.login();
+    global.cores.editor = new modules.core.editor();
+    global.cores.projectManager = new modules.core.projectManager();
     
 	/*database.queryPrep("SELECT * FROM user WHERE Username = ?;", [['michael']], function(err, row) {
 		if (err)
@@ -47,18 +52,19 @@ function init() {
 		else
 			console.log(row);
 	});*/
+    
+    var inputHandler = new modules.classes.InputHandler();
 			
 	// Websocket
 	socket.ws.on("connection", function(client) {
 		// Initialization of user
 		// Creation of the user & Add it to the user controller
-		controller.userController.createClient(client, modules.classes.User);
+		controller.userController.createClient(client);
 		
 		// Listening for any message
 		client.on("message", function(data) {
 			var message = new modules.classes.Message(JSON.parse(data));
 
-            // TODO: CHECK TO PASS USER ?
 			socket.handleMessage(message, client);
 		});
 		
@@ -66,7 +72,9 @@ function init() {
 		// socket.handle(message);
 	});
 
-    log("Server ready!", "info");
+    log("Server ready [" + ((new Date().getTime()) - startTime) + "ms]", "info");
+ 
+    inputHandler.init();
  
 	// Cannot work => move on handleMessage
 	/*socket.ws.on("leave", function(client) {
@@ -89,9 +97,8 @@ function includeLogic() {
 	// Link core files
 	modules.core.editor = require(modules.config.paths.core + "editor.js");
 	modules.core.login = require(modules.config.paths.core + "login.js");
-	modules.core.project = require(modules.config.paths.core + "project.js");
+	modules.core.projectManager = require(modules.config.paths.core + "project-manager.js");
 	
-    log("Done.", "debug");
     log("Loading classes", "debug");
     
 	// Link class files
@@ -106,8 +113,7 @@ function includeLogic() {
 	modules.classes.Database = require(modules.config.paths.classes + "Database.js");
 	modules.classes.Message = require(modules.config.paths.classes + "Message.js");
 	modules.classes.Socket = require(modules.config.paths.classes + "Socket.js");
-    
-    log("Done.", "debug");
+	modules.classes.InputHandler = require(modules.config.paths.classes + "InputHandler.js");
 }
 
 global.log = function(message, type, fileName) {
@@ -158,11 +164,24 @@ global.log = function(message, type, fileName) {
             console.log(modules.config.print.messages.debug + message);
             break;
     }
-
-
 }
 
-// Switch -> redirect core/xx
+// Used to align text
+global.pad = function(str, length, replacement, left) {
+    if(typeof str != "string")
+        str = String(str);
+
+    if(str.length > length)
+        return str.slice(0, length);
+
+    if(replacement == undefined)
+        replacement = " ";
+
+    if(left)
+        return replacement.repeat(length - str.length) + str;
+    else
+        return str + replacement.repeat(length - str.length);
+}
 
 init();
 

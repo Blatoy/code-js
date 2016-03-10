@@ -17,7 +17,7 @@ var Login = function(){
 	this.login = function() {
 		// changePage("project-manager");
         var msg = new Message();
-        msg.fromVal("login", {pass: $("#login-password").val(), username: $("#login-username").val()});
+        msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
         modules.socket.sendMessage(msg);
 	}
 	

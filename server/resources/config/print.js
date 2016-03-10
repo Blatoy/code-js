@@ -1,3 +1,6 @@
+// print.js (config) (server)
+// Contain things to print to the console
+
 var colors = {
     red: "\033[31m",
     green: "\033[32m",

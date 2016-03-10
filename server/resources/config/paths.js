@@ -1,3 +1,6 @@
+// paths.js (config) (server)
+// Contain where things are saved on the server
+
 var paths = {};
 
 paths["root"]               = __dirname + "\\..\\..\\";

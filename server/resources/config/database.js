@@ -1,3 +1,6 @@
+// database.js (config) (server)
+// Contain database informations
+
 module.exports = {
 	path: __dirname + "\\..\\..\\data\\database\\CodeDB.db",
 	tables: {

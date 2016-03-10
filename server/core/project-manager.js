@@ -1,4 +1,4 @@
-// editor.js (core) (server)
+// projects.js (core) (server)
 // ...
 
 module.exports = function() {

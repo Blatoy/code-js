@@ -10,6 +10,5 @@ module.exports = function(userController, fileController, projectController) {
 	this.projectController = projectController;
 	
 	// Methods
-	this.init = function() {
-	};
+	this.init = function() {};
 };

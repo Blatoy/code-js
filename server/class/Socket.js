@@ -1,7 +1,5 @@
-/*
-CLASS: Socket
-DESCRIPTION: Socket object
-*/
+// Socket.js (class) (server)
+// Handle everything related to sockets
 
 module.exports = function() {
 	// Attributes
@@ -17,13 +15,12 @@ module.exports = function() {
 	
 	this.handleMessage = function(message, client) {
         log("["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
-        
-		switch (message.type) {
+        var messageType = message.type.split(":");
+        message.type = messageType[1];
+         
+		switch (messageType[0]) {
 			case "login":
-				controller.userController.login(message.data, client);
-				break;
-			case "user-leave": 
-				controller.userController.removeUser(message.data.user);
+                cores.login.handleMessage(message, client);
 				break;
 		}
 	}

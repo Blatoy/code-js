@@ -1,34 +1,31 @@
-/*
-CLASS: User
-DESCRIPTION: Is a user on CodeJS, extends a NodeJS client
-*/
+// User.js (class) (server)
+// Is a user on CodeJS, extends a NodeJS client
 
 module.exports = function(client, clientId) {
-	// Attributes
+	// Defined for every user
 	this.clientId = clientId;
+	this.client = client;
+    
 	this.userId;
 	this.username;
 	this.lastConnection;
-	this.lastModified;	// ()
+	this.lastModified; // ()
 	this.projects = [];
 	this.contacts = [];
-	this.client = client;
 	
 	// Methods
-	this.init = function(userController, userId) {
-		this.userId = userId;
-		this.username = userController.getUsernameById(this.userId);
-		this.lasConnection = userController.getLastConnectionById(this.userId);
+	this.init = function(client, userId) {
+        
+		// this.userId = userId;
+		/*this.username = controller.userController.getUsernameById(this.userId);
+		this.lasConnection = userController.getLastConnectionById(this.userId);*/
 	}
 	
 	this.disconnect = function() {
 		
 	};
 	
-	this.remove = function() {
-	};
-	this.changePassword = function() {
-	};
-	this.updateLastConnectionDate = function() {
-	};
+	this.remove = function() {};
+	this.changePassword = function() {};
+	this.updateLastConnectionDate = function() {};
 };
