@@ -14,7 +14,7 @@ module.exports = function() {
 	};
 	
 	this.handleMessage = function(message, client) {
-        log("["+ controller.userController.getUser(client).getDebugName() +"] ["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
+        log(pad("["+ controller.userController.getUser(client).getDebugName() +"]", 10) + "["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
         var messageType = message.type.split(":");
         message.type = messageType[1];
          

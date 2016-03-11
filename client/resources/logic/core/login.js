@@ -1,24 +1,38 @@
-
+// login.js (core) (client)
+// Handle all login related things
 var Login = function(){
 	this.init = function() {
 		$("#login-button").on("click", this.login);
 		$("#login-sign-up").on("click", this.toggleSignUp);
 		$("#repeat-password-area").toggle();
-        $("#login-username, #login-password").on("keyup", function(e){
-            if($("#login-username").val().length > 2 && $("#login-password").val().length > 2)
-                $("#login-button").prop("disabled", false);
-            else
-                $("#login-button").prop("disabled", true);
-            if(e.keyCode == 13 && !$("#login-button").prop("disabled"))
+        $("#login-username, #login-password, #login-password-repeat").on("keyup", function(e){
+			var disableButton = true;
+			if($("#repeat-password-area").is(':visible')) {
+				if($("#login-password").val() == $("#login-password-repeat").val() && $("#login-password").val().length > 2)
+					disableButton = false;
+				else
+					disableButton = true;
+			}
+			else {
+				if($("#login-username").val().length > 2 && $("#login-password").val().length > 2)
+					disableButton = false;
+				else
+					disableButton = true;
+			}
+
+			$("#login-button").prop("disabled", disableButton);
+            if(e.keyCode == 13 && !disableButton)
                 $("#login-button").click();
-        })
+        });
 	}
 	
 	this.login = function() {
-		// changePage("project-manager");
         var msg = new Message();
-        msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
-        modules.socket.sendMessage(msg);
+		if($("#repeat-password-area").is(':visible'))
+			msg.fromVal("login:create-account", {pass: $("#login-password").val(), username: $("#login-username").val()});
+		else
+			msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
+			modules.socket.sendMessage(msg);
 	}
 	
     this.displayAttemptResult = function(success) {
@@ -33,6 +47,7 @@ var Login = function(){
     }
     
 	this.toggleSignUp = function() {
+		$("#login-button").prop("disabled", true);
 		$("#repeat-password-area").toggle();
 		if($("#repeat-password-area").is(':visible')) {
 			$("#login-button").val("Sign up");

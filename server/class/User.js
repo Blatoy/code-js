@@ -24,7 +24,7 @@ module.exports = function(client, clientId) {
         if(this.username)
             return this.username;
         else
-            return " CID: " + this.clientId;
+            return "CID: " + this.clientId;
     };
     
     this.handlePong = function() {
@@ -49,7 +49,11 @@ module.exports = function(client, clientId) {
         }
     };
     
-	this.disconnect = function() {};
+	this.disconnect = function() {
+		clearInterval(this.pingIntervalId);
+		controller.userController.removeUser(this);
+	};
+	
 	this.remove = function() {};
 	this.changePassword = function() {};
 	this.updateLastConnectionDate = function() {};

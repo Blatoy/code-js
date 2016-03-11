@@ -45,6 +45,30 @@ module.exports = function() {
             }
         );
 	};
+	
+	this.createAccount = function(userInformation, client) {
+		var msg = new modules.classes.Message();
+		
+		if(userInformation.pass.lentgh > 2 && userInformation.username.lentgh > 2) {
+			database.execPrep(
+				" INSERT INTO " + tables.user.name + 
+				" (" + tables.user.fields.username + ", " + tables.user.fields.pass + "," + tables.user.fields.inscriptionDate + ")" + 
+				" VALUES (?,?,?)", [userInformation.username, userInformation.pass, new Date().getTime()], 
+				function(err){
+					if(!err) {
+						msg.fromVal("login:inscription-status", true);
+						socket.sendMessage(client, msg);
+						log("New user inscription with username: " + userInformation.username, "info", "UserController.js");
+					}
+				});
+		}
+		else {
+			msg.fromVal("login:inscription-status", false);
+			socket.sendMessage(client, msg);
+			log("User inscription failed with username: " + userInformation.username, "err", "UserController.js");
+		}
+			
+	};
     
     this.pingAllUser = function() {
         for(var i = 0; i < controller.userController.users.length; i++) {
@@ -75,7 +99,7 @@ module.exports = function() {
 	this.removeUser = function(user) {
 		/*user.disconnect();
 		user.client.close();*/
-		users.splice(users.indexOf(user), 1);
+		this.users.splice(this.users.indexOf(user), 1);
 	};
 	
     /*this.database.queryPrep("SELECT " + this.tables.user.fields.pass + ", " + this.tables.user.fields.userId + " FROM " + this.tables.user.name + " WHERE " + this.tables.user.fields.username + " = ?", [user.name], function(err, row) {

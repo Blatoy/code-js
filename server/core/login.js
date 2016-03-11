@@ -7,6 +7,9 @@ module.exports = function() {
             case "login":
                 controller.userController.login(message.data, client);
                 break;
+			case "create-account":
+                controller.userController.createAccount(message.data, client);
+				break;
         }
     }
 }
