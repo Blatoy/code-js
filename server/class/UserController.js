@@ -49,7 +49,7 @@ module.exports = function() {
 	this.createAccount = function(userInformation, client) {
 		var msg = new modules.classes.Message();
 		
-		if(userInformation.pass.lentgh > 2 && userInformation.username.lentgh > 2) {
+		if(userInformation.pass.length > 2 && userInformation.username.length > 2) {
 			database.execPrep(
 				" INSERT INTO " + tables.user.name + 
 				" (" + tables.user.fields.username + ", " + tables.user.fields.pass + "," + tables.user.fields.inscriptionDate + ")" + 
@@ -60,12 +60,17 @@ module.exports = function() {
 						socket.sendMessage(client, msg);
 						log("New user inscription with username: " + userInformation.username, "info", "UserController.js");
 					}
+                    else {
+                        msg.fromVal("login:inscription-status", false);
+                        socket.sendMessage(client, msg);
+                        log("User inscription failed (data error) with username: " + userInformation.username, "err", "UserController.js");
+                    }
 				});
 		}
 		else {
 			msg.fromVal("login:inscription-status", false);
 			socket.sendMessage(client, msg);
-			log("User inscription failed with username: " + userInformation.username, "err", "UserController.js");
+			log("User inscription failed (spam) with username: " + userInformation.username, "err", "UserController.js");
 		}
 			
 	};
