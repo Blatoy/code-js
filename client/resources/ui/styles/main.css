@@ -22,9 +22,9 @@ body {
 
 #top-bar {
 	position: fixed;
-	width: 100%;
-	top: 65px;
+	top: 55px;
 	left: 425px;
+    width: calc(100% - 425px);
 	display: inline-block;
 }
 
@@ -69,14 +69,14 @@ input[type="email"], input[type="text"], input[type="password"]  {
 	color: #666666;
 }
 
+input[type="email"]:focus, input[type="text"]:focus, input[type="password"]:focus {
+	color: black;
+    border-bottom: 2px solid #2d86df;
+}
+
 input[type="email"]:invalid, input[type="text"]:invalid, input[type="password"]:invalid  {
 	border-bottom: 2px solid orangered;
 	box-shadow: 0 2px 2px -2px orangered;
-}
-
-
-input[type="email"]:focus, input[type="text"]:focus, input[type="password"]:focus {
-	color: black;
 }
 
 input[type="button"], button {
@@ -109,6 +109,9 @@ input[type="button"]:disabled {
     cursor:default;
 }
 
+input {
+    outline: none;
+}
 
 /*	--------------------------- TOOLS CLASSES ----------------------------*/
 

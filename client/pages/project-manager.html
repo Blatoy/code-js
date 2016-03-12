@@ -2,26 +2,18 @@
 	<div id="search-bar">
 		<input type="text" placeholder="Search"/>
 	</div>
-	<div>
-		<div id="path">
-			<div class="path-project">Project</div>
-			<img class="path-arrow" src="resources/ui/images/path-arrow.svg" alt="Path Arrow">
-
-			<div class="path-folder">Folder 1</div>
-			<img class="path-arrow" src="resources/ui/images/path-arrow.svg" alt="Path Arrow">
-			
-			<div class="path-folder">Folder 2</div>
-			<img class="path-arrow" src="resources/ui/images/path-arrow.svg" alt="Path Arrow">
-			
-			<div class="path-folder">Folder 3</div>
-		</div>
-		<div id="tool-box">
-			<div class="inline tool-box-item" id="tool-box-new-file">Add<img class="tool-box-image" src="resources/ui/images/icons/add13.png" alt="folder-image"/></div><!--
-			--><div class="inline tool-box-item" id="tool-box-rename">Rename<img class="tool-box-image" src="resources/ui/images/icons/pencil124.png" alt="folder-image"/></div><!--
-			--><div class="inline tool-box-item" id="tool-box-move">Move<img class="tool-box-image" src="resources/ui/images/icons/right11.png" alt="folder-image"/></div><!--
-			--><div class="inline tool-box-item" id="tool-box-delete">Delete<img class="tool-box-image" src="resources/ui/images/icons/bin9.png" alt="folder-image"/></div>
-		</div>
-	</div>
+    <div id="path">
+        <div class="path-project">Project /</div>
+        <div class="path-folder">Folder 1 /</div>
+        <div class="path-folder">Folder 2 /</div>
+        <div class="path-folder">Folder 3</div>
+    </div>
+    <div id="tool-box">
+        <div class="inline tool-box-item" id="tool-box-new-file">New file</div>
+        <div class="inline tool-box-item" id="tool-box-rename">Rename</div>
+        <div class="inline tool-box-item" id="tool-box-move">Move</div>
+        <div class="inline tool-box-item" id="tool-box-delete">Delete</div>
+    </div>
 </div>
 <div id="page-content">
 	<div id="file-structure">
@@ -31,15 +23,20 @@
 				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>main.cpp</li>
 				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>scene.cpp</li>
 				<li>
-					<li class="tree-folder"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
+					<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
 					<ul>
 						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>sun.jpg</li>
 						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>earth.jpg</li>
 						<li>
-							<li class="tree-folder"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
+							<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
 							<ul>
 								<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
-							</ul>
+                                <li>
+                                    <ul>
+                                        <li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
+                                    </ul>
+                                </li>
+                            </ul>
 						</li>
 					</ul>
 				</li>
@@ -47,49 +44,68 @@
 			<li class="tree-project">Project Coord Tracker</li>
 			<ul>
 				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>manifest.xml</li>
-				<li class="tree-folder"><img alt="img" src="resources/ui/images/folder.png"/>res</li>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>res</li>
 				<ul>
 					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>MainActivity.java</li>
 				</ul>
 			</ul>
 		</ul>
 	</div>
+    <div id="file-filters">
+        <span id="file-filters-name" class="filter-title">Name</span><!--
+        --><span id="file-filters-date" class="filter-title">Last modification</span><!--
+        --><span id="file-filters-workers" class="filter-title">Current workers<!--<img alt="arrow" src="resources/ui/images/downward-arrow.png"/>--><img></span>
+    </div>
 	<div id="file-content">
-		<div id="file-filters">
-			<div id="file-filters-name"><span class="filtersTitle">Name</span><img alt="arrow" src="resources/ui/images/downward-arrow.png"/></div>
-			<div id="file-filters-date"><span class="filtersTitle">Last modification</span><img alt="arrow" src="resources/ui/images/downward-arrow.png"/></div>
-			<div id="file-filters-workers"><span class="filtersTitle">Current workers</span><img alt="arrow" src="resources/ui/images/downward-arrow.png"/></div>
-		</div>
-		<div class="folder">
-			<div class="folder-icon"><img src="resources/ui/images/folder.png" alt="folder-image"/></div>
-			<div class="folder-title">Images</div>
-			<div class="folder-lastModified">26 Jan. 2016</div>
-			<div class="folder-currWorkingPeople">16</div>
+		<div class="file">
+			<span class="file-icon"><img src="resources/ui/images/folder.png" alt="folder-image"/></span>
+			<span class="file-title">Images</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
 		</div>
 		<div class="file">
-			<div class="file-icon"><img src="resources/ui/images/file.png" alt="file-image"/></div>
-			<div onclick="changePage('editor')" class="file-title">main.cpp</div>
-			<div class="file-lastModified">12 Déc. 2015</div>
-			<div class="file-currWorkingPeople">5</div>
+			<span class="file-icon"><img src="resources/ui/images/folder.png" alt="folder-image"/></span>
+			<span class="file-title">Styles</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
 		</div>
 		<div class="file">
-			<div class="file-icon"><img src="resources/ui/images/file.png" alt="file-image"/></div>
-			<div class="file-title">scene.cpp</div>
-			<div class="file-lastModified">17 Arvil 2013</div>
-			<div class="file-currWorkingPeople">1</div>
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">index.html</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
 		</div>
 		<div class="file">
-			<div class="file-icon"><img src="resources/ui/images/file.png" alt="file-image"/></div>
-			<div class="file-title">shader.cpp</div>
-			<div class="file-lastModified">03 Mars 2014</div>
-			<div class="file-currWorkingPeople">2</div>
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">script.js</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
 		</div>
 		<div class="file">
-			<div class="file-icon"><img src="resources/ui/images/file.png" alt="file-image"/></div>
-			<div class="file-title">texture.cpp</div>
-			<div class="file-lastModified">10 Févr. 2016</div>
-			<div class="file-currWorkingPeople">13</div>
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">test.png</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
 		</div>
+		<div class="file">
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">todo.txt</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
+		</div>
+		<div class="file">
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">readme.txt</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
+		</div>
+		<div class="file">
+			<span class="file-icon"><img src="resources/ui/images/file.png" alt="folder-image"/></span>
+			<span class="file-title">Images</span>
+			<span class="file-last-modification">26 Jan. 2016</span>
+			<span class="file-working-people">16</span>
+		</div>
+
 	</div>
 	<div id="file-history">
 		<div class="history-project-name">Project Helios</div>
@@ -106,8 +122,3 @@
 		</div>
 	</div>
 </div>
-<script>
-$(function() {
-	$("ul.menu").superfish();
-});
-</script>

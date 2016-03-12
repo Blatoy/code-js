@@ -1,37 +1,35 @@
 ﻿/*	--------------------------- PAGE HEADER ----------------------------*/
 #search-bar {
-	display: inline-block;
-	width: 55%;
-	margin-bottom: 20px;
+	display: block;
+	width: 50%;
+    margin-bottom: 15px;
 }
 
 #tool-box {
-	/* TODO: Same alignement with path bar */
-	/*position: fixed;
-	right: 300px;*/
-	width: 303px;
-	margin-right: 725px;		/* (top-bar left)425 + (file-history width)300 */
-	display: inline-block;
-	float: right;
+    color:#666;
+    float:right;
+    margin-right: 35px;
+    display: inline-block;
+    font-size: 0.9em;
 }
-/* Last item > no border right */
-#tool-box-delete {
-	border: none;
+
+#path {
+    display: inline-block;
+	float: left;
+    color:#666;
+    font-size: 0.9em;
 }
 
 .tool-box-item {
-	border-right:1px solid #eee;
-	text-align: right;
-	font-size: 0.8em;
 	cursor: pointer;
-	padding-left: 2px;
+	padding-left: 20px;
 	padding-right: 2px;
 	border-radius: 1px;
 	margin: 0;
 }
 
 .tool-box-item:hover {
-	background-color: #eeeeee;
+	color:black;
 }
 
 .tool-box-image {
@@ -40,39 +38,19 @@
 	vertical-align:middle;
 }
 
-#path {
-	float: left;
+.path-project, .path-folder {
+    display: inline-block;
+    padding-right: 3px;
 }
 
 .path-project {
-	font-weight: bold;
-    display: inline-block;
-    font-size: 14px;
-    height: 28px;
-    line-height: 28px;
-    vertical-align: top;
-	padding-top: 1px;
-    padding-right: 6px;
-    padding-bottom: 1px;
-    padding-left: 0px;		/* Previous value: 6 -> changed because it changed alignment */
-}
-.path-project:hover, 
-.path-folder:hover {
-	background-color: #eeeeee;
-	cursor: pointer;
-	border-radius: 2px;
+    font-weight: bold;
 }
 
-.path-folder {
-	display: inline-block;
-    font-size: 14px;
-    height: 28px;
-    line-height: 28px;
-    vertical-align: top;
-	padding-top: 1px;
-    padding-right: 6px;
-    padding-bottom: 1px;
-    padding-left: 6px;
+.path-project:hover, 
+.path-folder:hover {
+	color:black;
+	cursor: pointer;
 }
 
 .path-arrow {
@@ -92,7 +70,7 @@
 	width: 300px;
 	height: calc(100% - 150px - 10px);
 	overflow: auto;
-	
+	background-color: rgb(249, 249, 249);
 	font-family: Tahoma, Geneva, sans-serif;
 }
 
@@ -181,7 +159,6 @@
 .tree li {
 	list-style-type: none;
 	white-space: nowrap;
-	width: 100%;
 	font-size: 15px;
 }
 
@@ -194,17 +171,14 @@
 	overflow: hidden;
 }
 
-.tree-file,
-.tree-folder {
+.tree-file {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 	padding: 2px;
-	padding-left: 20px;
-	margin-left: -35px;		/* Get by javascript? */
+
 }
 
-.tree-folder img,
 .tree-file img {
 	height: 24px;
 	width: auto;
@@ -214,7 +188,6 @@
 }
 
 .tree-project:hover,
-.tree-folder:hover,
 .tree-file:hover {
 	background-color: #eeeeee;
 	border-radius: 2px;
@@ -223,98 +196,102 @@
 
 /*	--------------------------- PAGE CONTENT (CENTER) ----------------------------*/
 
-#file-filters {
-	width: 100%;
-	height: 25px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-top: 0px;
-	padding-bottom: 10px;
-	vertical-align: middle;
-	line-height: 35px;
-	border-bottom: 1px solid #e3e3e3;
-}
-
-#file-filters-name {
-	margin-left: 73px;
-	float: left;
-}
-
-#file-filters-date {
-	margin-left: 440px;
-	float: left;
-}
-
-#file-filters-workers {
-	margin-left: 130px;
-	float: left;
-}
-
-#file-filters-name img,
-#file-filters-date img,
-#file-filters-workers img {
+/*
+.filter-title img {
 	cursor: pointer;
 	width: 25px;
 	vertical-align: middle;
-}
-
-.filtersTitle {
-	cursor: pointer;
-}
+}*/
 
 #file-content {
 	position: fixed;
-	top: 151px;
+	top: 177px;
 	left: 221px;
-	right: 331px;
+	right: 311px;
+    bottom: 0px;
+    padding: 10px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.file, 
-.folder {
-	width: 100%;
+#file-filters {
+	position: fixed;
+	top: 151px;
+	left: 221px;
+	right: 311px;
+	height: 25px;
+	line-height: 25px;
+	border-bottom: 1px solid #e3e3e3;
+    color: #888;
+}
+
+#file-filters span:hover {
+    color: black;
+}
+
+
+.file{
+	width: calc(100% - 20px);
 	height: 35px;
-	padding: 5px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	padding-left: 10px;
 	padding-right: 10px;
-	vertical-align: middle;
+	vertical-align: top;
 	line-height: 35px;
 	font-size: 15px;
 	
 	background-color: white;
 	border-radius: 2px;
 	box-shadow: 2px 2px 2px #EEEEEE;
-	margin-bottom: 14px;
+	margin-bottom: 9px;
 }
 
-.folder:hover , .file:hover{
+
+.filter-title {
+    cursor: pointer;
+}
+
+#file-filters span {
+    position: absolute;
+}
+
+.file span {
+    display: inline-block;
+    position: absolute;
+}
+
+#file-filters-name {
+   left: 10%;
+}
+
+#file-filters-date {
+    left: 40%;
+}
+
+#file-filters-workers {
+    left:70%;
+}
+
+.file:hover{
 	background-color: #eeeeee;
 	cursor: pointer;
 }
 
-.folder-icon, .file-icon {
-	width: 2%;
-	text-align: center;
-	float: left;
+.file-icon img{
+    width: 20px;
+    vertical-align: middle;
 }
 
-.folder-icon img, .file-icon img {
-	width: 35px;
+.file-title {
+    left: 10%;
 }
 
-.folder-title, .file-title {
-	padding-left: 50px;
-	width: 38%;
-	float: left;
+.file-last-modification  {
+    left: 40%;
 }
 
-.folder-lastModified, .file-lastModified{
-	text-align: center;
-	width: 25%;
-	float: left;
+.file-working-people{
+    left: 70%;
 }
 
-.folder-currWorkingPeople, .file-currWorkingPeople {
-	text-align: center;
-	width: 25%;
-	float: left;
-}
