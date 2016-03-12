@@ -16,6 +16,7 @@ module.exports = function() {
 		log("New connection (CID: " + userCount + ")", "info", "UserController.js");
 	};
 	
+    
 	this.login = function(userInformation, client) {
         var user = this.getUser(client);
         
@@ -56,19 +57,19 @@ module.exports = function() {
 				" VALUES (?,?,?)", [userInformation.username, userInformation.pass, new Date().getTime()], 
 				function(err){
 					if(!err) {
-						msg.fromVal("login:inscription-status", true);
+						msg.fromVal("login:inscription-status", {success:true, code:0});
 						socket.sendMessage(client, msg);
 						log("New user inscription with username: " + userInformation.username, "info", "UserController.js");
 					}
                     else {
-                        msg.fromVal("login:inscription-status", false);
+                        msg.fromVal("login:inscription-status", {success:false, code:1});
                         socket.sendMessage(client, msg);
                         log("User inscription failed (data error) with username: " + userInformation.username, "err", "UserController.js");
                     }
 				});
 		}
 		else {
-			msg.fromVal("login:inscription-status", false);
+			msg.fromVal("login:inscription-status", {success:true, code:2});
 			socket.sendMessage(client, msg);
 			log("User inscription failed (spam) with username: " + userInformation.username, "err", "UserController.js");
 		}

@@ -35,7 +35,7 @@ var Login = function(){
 			modules.socket.sendMessage(msg);
 	}
 	
-    this.displayAttemptResult = function(success) {
+    this.handleLoginAttempt = function(success) {
         if(success) {
             changePage("project-manager");
         }
@@ -43,6 +43,30 @@ var Login = function(){
             $("#login-password").val("");
             $("#login-password").focus();
             $("#login-password").prop("placeholder", "Password incorrect");
+        }
+    }
+    
+    this.handleInscriptionAttempt = function(data) {
+        if(data.success) {
+            this.toggleSignUp();
+            $("#login-button").click();
+        }
+        else {
+            $("#login-username").val("");
+            $("#login-username").focus();
+            
+            switch(data.code) {
+                case 1:
+                    // Username already in use
+                    $("#login-username").prop("placeholder", "Username already in use");
+                    break;
+                case 2:
+                    // Invalid data
+                    $("#login-username").prop("placeholder", "Invalid data");
+                    $("#login-password-repeat").val("");
+                    $("#login-password-repeat").val("");
+                    break;
+            }
         }
     }
     
@@ -63,7 +87,10 @@ var Login = function(){
     this.handleMessage = function(message) {
         switch(message.type) {
             case "login-attempt":
-                modules.login.displayAttemptResult(message.data);
+                modules.login.handleLoginAttempt(message.data);
+                break;
+            case "inscription-status":
+                modules.login.handleInscriptionAttempt(message.data);
                 break;
         }
     };
