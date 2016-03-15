@@ -10,7 +10,8 @@ global.controller;
 global.socket;
 global.database;
 global.tables;
-
+global.projectController;
+global.fileController;
 
 // INITIALISATION
 function init() {
@@ -78,6 +79,14 @@ function init() {
 		userController.removeUser(user);
 		console.log("Client removed");
 	});*/
+	
+	// Test with file controller
+	/*global.fileController = new modules.classes.FileController();
+	global.fileController.init();
+	// global.fileController.createFile("myFile.cpp");
+	global.projectController = new modules.classes.ProjectController();
+	global.projectController.init();
+	global.projectController.createFolder("Project Helios");*/
 }
 
 function includeLogic() {
@@ -142,7 +151,6 @@ global.log = function(message, type, fileName) {
         case 0:
             console.log(modules.config.print.messages.error + message);
             break;
-		default:
         case "info":
         case 1:
             console.log(modules.config.print.messages.info + message);
@@ -151,6 +159,7 @@ global.log = function(message, type, fileName) {
         case 2:
             console.log(modules.config.print.messages.warning + message);
             break;
+		default:
         case "debug":
         case 3:
             console.log(modules.config.print.messages.debug + message);
