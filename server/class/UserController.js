@@ -21,10 +21,9 @@ module.exports = function() {
         var user = this.getUser(client);
         
         database.getSingle(
-            " SELECT " + tables.user.fields.pass + ", " + tables.user.fields.userId + ", " + tables.user.fields.username + 
-            " FROM " + tables.user.name + 
+            " SELECT * FROM " + tables.user.name + 
             " WHERE " + tables.user.fields.username + " = ?", [userInformation.username], 
-            function(err, row){
+            function(err, row) {
                 var loggedSuccessful = false;
                 var msg = new modules.classes.Message();
                 
@@ -99,7 +98,23 @@ module.exports = function() {
 	this.initUser = function(user, row) {
         user.userId = row[tables.user.fields.userId];
         user.username = row[tables.user.fields.username];
+        user.avatarURL = row[tables.user.fields.avatarURL];
+		user.lastConnection = new Date().getTime();
         user.isConnected = true;
+		
+		database.execPrep(
+			" UPDATE " + tables.user.name + 
+			" SET " + tables.user.fields.lastConnection + " = ?" +
+			" WHERE " + tables.user.fields.userId + " = ?", [user.lastConnection, user.userId], 
+			function(err){
+				if(!err) {
+					log("Inserted last connection date: " + user.username, "info", "UserController.js");
+				}
+				else {
+					log("Failed insertion of last connection date: " + user.username, "err", "UserController.js");
+				}
+			}
+		);
 	};
 	
 	this.removeUser = function(user) {
@@ -107,39 +122,4 @@ module.exports = function() {
 		user.client.close();*/
 		this.users.splice(this.users.indexOf(user), 1);
 	};
-	
-    /*this.database.queryPrep("SELECT " + this.tables.user.fields.pass + ", " + this.tables.user.fields.userId + " FROM " + this.tables.user.name + " WHERE " + this.tables.user.fields.username + " = ?", [user.name], function(err, row) {
-        if (err) 
-            console.log(err);
-        else {
-            console.log(row);
-            if (user.pass == row[0]) {
-                var d = new Date();
-                this.database.update(tables.user.fields, [tables.user.fields.lastConnection], [d.getTime()], tables.user.fields.name, user.name);
-                this.getUserByClientId(user.clientId).init(this, row[1]);
-            }
-        }
-    });*/
-    
-	/*this.getUsernameById = function(userId) {
-		this.database.queryPrep("SELECT " + this.tables.user.fields.username + " FROM " + this.tables.user.name + " WHERE " + this.tables.user.fields.userId + " = ?", [userId], function(err, row) {
-			if (err) 
-				console.log(err);
-			else {
-				console.log(row[0]);
-				return row[0];
-			}
-		});
-	};
-	
-	this.getLastConnectionById = function(userId) {
-		this.database.queryPrep("SELECT " + this.tables.user.fields.lastConnection + " FROM " + this.tables.user.name + " WHERE " + this.tables.user.fields.userId + " = ?", [userId], function(err, row) {
-			if (err) 
-				console.log(err);
-			else {
-				console.log(row[0]);
-				return row[0];
-			}
-		});
-	};*/
 };

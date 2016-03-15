@@ -13,6 +13,7 @@ module.exports = function(client, clientId) {
 	this.userId;
 	this.username;
 	this.lastConnection;
+	this.avatarURL;
 	this.lastModified; // ()
 	this.projects = [];
 	this.contacts = [];

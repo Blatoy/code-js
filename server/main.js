@@ -113,12 +113,7 @@ function includeLogic() {
 }
 
 global.log = function(message, type, fileName) {
-    var colors = modules.config.print.colors;
-    
-    // Default type is error
-    if(!type)
-        type = 0;
-        
+    var colors = modules.config.print.colors;        
     // If type is debug, check if debug is enabled
     if(type == "debug" && !modules.config.global.debug)
         return;
@@ -147,6 +142,7 @@ global.log = function(message, type, fileName) {
         case 0:
             console.log(modules.config.print.messages.error + message);
             break;
+		default:
         case "info":
         case 1:
             console.log(modules.config.print.messages.info + message);
@@ -159,6 +155,7 @@ global.log = function(message, type, fileName) {
         case 3:
             console.log(modules.config.print.messages.debug + message);
             break;
+		
     }
 }
 
