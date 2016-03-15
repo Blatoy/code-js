@@ -25,7 +25,7 @@ module.exports = function() {
 			else {
 				log("Successfully got projects of user '" + user.username + "'", "debug", "ProjectController.js");
 				var msg = new modules.classes.Message();
-				msg.fromVal("project:project-list", row)
+				msg.fromVal("project:project-list", {projectId: row[0].ProjectID, permissionLevel: row[0].PermissionLevel, userColor: row[0].UserColor});
 				socket.sendMessage(user.client, msg);
 			}
 		});
