@@ -230,6 +230,7 @@ body {
 	overflow-x: hidden;
 }*/
 
+/*	--------------------------- Chat ----------------------------*/
 #chat {
 	position: fixed;
 	top: 510px;
@@ -240,7 +241,7 @@ body {
 
 #chat-read {
 	display: block;
-	width: 100%;
+	width: 220px;
 	height: 265px;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -248,9 +249,16 @@ body {
 }
 
 .chat-read-elements {
+	width: 200px;
 	display: block;
 	border: 1px solid #a3a3a3;
 	padding: 4px;
+}
+
+.chat-read-elements-message {
+	display: block;
+	width: 190px;
+	white-space: normal;
 }
 
 .chat-read-elements-sender {
@@ -270,7 +278,7 @@ body {
 
 #chat-write {
 	position: fixed;
-	bottom: 0;
+	top: 775px;
 	padding-top: 5px;
 	display: block;
 	width: 220px;
@@ -286,7 +294,7 @@ body {
 
 #chat-write-send {
 	display: inline-block;
-	width: 40px;
+	width: 30px;
 	float: right;
 }
 
@@ -295,7 +303,10 @@ body {
 	display: block;
 	position: fixed;
 	top: 810px;
-	width: 315px;
+	padding-bottom: -50px;
+	width: 220px;
+	height: 145px;
+	background-color: red;
 }
 
 .mini-map-page {
