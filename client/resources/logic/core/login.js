@@ -1,6 +1,5 @@
 // login.js (core) (client)
 // Handle all login related things
-changePage("project-manager");
 
 var Login = function(){
 	this.init = function() {
