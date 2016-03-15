@@ -42,90 +42,103 @@
 		<textarea id="mirror-textarea"></textarea>
 	</div>
 	
-	<div id="left-pannel">
-		<div id="file-structure">
-			<ul class="tree">
-				<li class="tree-project">Project Helios</li>
-				<ul>
-					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>main.cpp</li>
-					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>scene.cpp</li>
-					<li>
-						<li class="tree-folder"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
-						<ul>
-							<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>sun.jpg</li>
-							<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>earth.jpg</li>
-							<li>
-								<li class="tree-folder"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
-								<ul>
-									<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
+	<!--<div id="left-pannel">-->
+	<div id="file-structure">
+		<ul class="tree">
+			<li class="tree-project">Project Helios</li>
+			<ul>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>main.cpp</li>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>scene.cpp</li>
+				<li>
+					<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
+					<ul>
+						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>sun.jpg</li>
+						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>earth.jpg</li>
+						<li>
+							<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
+							<ul>
+								<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
+                                <li>
+                                    <ul>
+                                        <li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
+                                    </ul>
+                                </li>
+                            </ul>
+						</li>
+					</ul>
+				</li>
 			</ul>
-		</div>
-		<div id="chat">
-			<div id="chat-read">
-				<div class="chat-read-elements">
-					<div class="chat-read-elements-sender">
-						<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
-						<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
-					</div>
-					<div class="chat-read-elements-message">
-						Message 1. Ok ok ok ok ok ok ok.
-					</div>
+			<!--<li class="tree-project">Project Coord Tracker</li>
+			<ul>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>manifest.xml</li>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>res</li>
+				<ul>
+					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>MainActivity.java</li>
+				</ul>
+			</ul>-->
+		</ul>
+	</div>
+	<div id="chat">
+		<div id="chat-read">
+			<div class="chat-read-elements">
+				<div class="chat-read-elements-sender">
+					<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
+					<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
 				</div>
-				
-				<div class="chat-read-elements">
-					<div class="chat-read-elements-sender">
-						<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
-						<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
-					</div>
-					<div class="chat-read-elements-message">
-						Message 2. Ok ok ok ok ok ok ok.
-					</div>
-				</div>
-				
-				<div class="chat-read-elements">
-					<div class="chat-read-elements-sender">
-						<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
-						<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
-					</div>
-					<div class="chat-read-elements-message">
-						Message 3. Ok ok ok ok ok ok ok.
-					</div>
-				</div>
-				
-				<div class="chat-read-elements">
-					<div class="chat-read-elements-sender">
-						<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
-						<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
-					</div>
-					<div class="chat-read-elements-message">
-						Message 3. Ok ok ok ok ok ok ok.
-					</div>
-				</div>
-				
-				<div class="chat-read-elements">
-					<div class="chat-read-elements-sender">
-						<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
-						<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
-					</div>
-					<div class="chat-read-elements-message">
-						Message 3. Ok ok ok ok ok ok ok.
-					</div>
+				<div class="chat-read-elements-message">
+					Message 1. Ok ok ok ok ok ok ok.
 				</div>
 			</div>
-			<div id="chat-write">
-				<input type="text" id="chat-write-input"></input>
-				<input type="button" id="chat-write-send"></input>
+			
+			<div class="chat-read-elements">
+				<div class="chat-read-elements-sender">
+					<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
+					<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
+				</div>
+				<div class="chat-read-elements-message">
+					Message 2. Ok ok ok ok ok ok ok.
+				</div>
+			</div>
+			
+			<div class="chat-read-elements">
+				<div class="chat-read-elements-sender">
+					<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
+					<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
+				</div>
+				<div class="chat-read-elements-message">
+					Message 3. Ok ok ok ok ok ok ok.
+				</div>
+			</div>
+			
+			<div class="chat-read-elements">
+				<div class="chat-read-elements-sender">
+					<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
+					<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
+				</div>
+				<div class="chat-read-elements-message">
+					Message 3. Ok ok ok ok ok ok ok.
+				</div>
+			</div>
+			
+			<div class="chat-read-elements">
+				<div class="chat-read-elements-sender">
+					<img class="chat-read-elements-sender-avatar" src="resources/ui/images/modifier-avatar.png" alt="Profil avatar" />
+					<div class="chat-read-elements-sender-name">Jean-Louis Flûte</div>
+				</div>
+				<div class="chat-read-elements-message">
+					Message 3. Ok ok ok ok ok ok ok.
+				</div>
 			</div>
 		</div>
-	
-		<div id="mini-map">
-			<canvas>
-			</canvas>
+		<div id="chat-write">
+			<input type="text" id="chat-write-input"></input>
+			<input type="button" id="chat-write-send"></input>
 		</div>
 	</div>
+	
+	<div id="mini-map">
+		<canvas>
+		</canvas>
+	</div>
+<!--</div>-->
 </div>
