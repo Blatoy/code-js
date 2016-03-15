@@ -15,7 +15,13 @@ module.exports = function() {
 	
 	this.getProjectList = function(client) {
 		user = controller.userController.getUser(client);
-		database.getArray("SELECT * FROM " + tables.relUserProject.name + " WHERE " + tables.user.fields.userId + " = ?", user.userId, function(err, row) {
+		database.getArray(" SELECT p." + tables.project.fields.name + " as 'projectName', p." + tables.project.fields.lastEditionDate + " as 'lastEditDate', p." + 
+										 tables.relUserProject.fields.projectId + " as 'projectId', p." + tables.relUserProject.fields.permissionLevel + 
+										 " as 'permissionLevel', p." + tables.relUserProject.fields.userColor + " as 'userColor', n." + tables.project.fields.isFolder + " as 'isFolder'" +
+						  " FROM n " + tables.project.name + 
+						  " LEFT JOIN p " + tables.relUserProject.name + 
+						  " ON " + "n." + tables.project.projectId + " = " + "p." + tables.relUserProject.projectId + 
+						  " WHERE p." + tables.relUserProject.fields.userId + " = ?", user.userId, function(err, row) {
 			if (err) {
 				log("Error getting projets of user '" + user.username + "'", "err", "ProjectController.js");
 				var msg = new modules.classes.Message();
@@ -24,8 +30,12 @@ module.exports = function() {
 			}
 			else {
 				log("Successfully got projects of user '" + user.username + "'", "debug", "ProjectController.js");
+				var data = [];
 				var msg = new modules.classes.Message();
-				msg.fromVal("project:project-list", {projectId: row[0].ProjectID, permissionLevel: row[0].PermissionLevel, userColor: row[0].UserColor});
+				for (var i = 0; i < row.length; i++) {
+					data.push({projectName: row[i].projectName, lastEditDate: row[i].lastEditDate, isFolder: row[i].isFolder, projectId: row[i].projectId, permissionLevel: row[i].permissionLevel, userColor: row[i].userColor});
+				}
+				msg.fromVal("project:project-list", data);
 				socket.sendMessage(user.client, msg);
 			}
 		});
