@@ -6,8 +6,11 @@ var projectManager = function() {
 	};
 	
 	this.displayProjects = function(data) {
-		if(data == null) {
+		if(data.length == 0) {
 			$("#file-content").text("There's nothing here.");
+		}
+		else {
+			$("#file-content").html("<div class='file'>"+data[0].projectId+"</div>");
 		}
 	};
 	
