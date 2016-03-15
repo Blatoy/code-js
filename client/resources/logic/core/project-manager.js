@@ -11,11 +11,11 @@ var projectManager = function() {
 		}
 		else {
 			for(var i = 0; i++; i < data.length) {
-				var imageType = "folder";
+				var imageType = data.isFolder ? "folder" : "file";
 				$("#file-content").html('<div class="file">' + 
 					'<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + folder + '-image"/></span>' + 
 					'<span class="file-title">' + data.projectName + '</span>' + 
-					'<span class="file-last-modification">' + data.lastModification + '</span>' + 
+					'<span class="file-last-modification">' + data.lastEditDate + '</span>' + 
 					'<span class="file-working-people">' + Math.round(Math.random() * 20) + '</span>' + 
 				'</div>');
 			}
