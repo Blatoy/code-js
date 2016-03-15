@@ -150,20 +150,77 @@ body {
 	background-color: none;
 }
 
+
+/*	--------------------------- FILE STRUCTURE ----------------------------*/
+
+#file-structure {
+	position: fixed;
+	bottom: 0px;
+	top: 151px;
+	border-right: 1px solid #e3e3e3;
+	width: 220px;
+	font-family: Tahoma, Geneva, sans-serif;
+}
+
+.tree {
+	padding: 0px;
+	margin: 0px;
+}
+
+.tree li {
+	list-style-type: none;
+	white-space: nowrap;
+	font-size: 15px;
+}
+
+.tree-project {
+	padding-top: 4px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.tree-file {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	padding: 2px;
+
+}
+
+.tree-file img {
+	height: 24px;
+	width: auto;
+	border-radius: 2px;
+	margin-right: 5px;
+	margin-bottom: -5px;
+}
+
+.tree-project:hover,
+.tree-file:hover {
+	background-color: #eeeeee;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+
+
 /*Right Zone */
 
 /* Obsolete */
-#right-pannel {
+/*#left-pannel {
 	border-left: 1px solid #a3a3a3;
 	position: fixed;
 	right: 0;
 	top: 101px;
 	background-color: #eeeeee;
-}
+}*/
 
 /*    Tree    */
 /* Obsolete */
-#right-file-structure {
+/*#file-structure {
 	position: fixed;
 	height: 400px;
 	top: 101px;
@@ -171,7 +228,7 @@ body {
 	width: 315px;
 	overflow-y: auto;
 	overflow-x: hidden;
-}
+}*/
 
 #chat {
 	position: fixed;
