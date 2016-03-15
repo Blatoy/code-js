@@ -15,17 +15,18 @@ module.exports = function() {
 	
 	this.getProjectList = function(client) {
 		user = controller.userController.getUser(client);
-		database.getArray(" SELECT p." + tables.project.fields.name + " as 'projectName', p." + tables.project.fields.lastEditionDate + " as 'lastEditDate', p." + 
+		database.getArray(" SELECT n." + tables.project.fields.name + " as 'projectName', p." + 
 										 tables.relUserProject.fields.projectId + " as 'projectId', p." + tables.relUserProject.fields.permissionLevel + 
-										 " as 'permissionLevel', p." + tables.relUserProject.fields.userColor + " as 'userColor', n." + tables.project.fields.isFolder + " as 'isFolder'" +
-						  " FROM n " + tables.project.name + 
-						  " LEFT JOIN p " + tables.relUserProject.name + 
-						  " ON " + "n." + tables.project.projectId + " = " + "p." + tables.relUserProject.projectId + 
-						  " WHERE p." + tables.relUserProject.fields.userId + " = ?", user.userId, function(err, row) {
+										 " as 'permissionLevel', p." + tables.relUserProject.fields.userColor + " as 'userColor'" +
+						  " FROM " + tables.project.name + " n " + 
+						  " LEFT JOIN " + tables.relUserProject.name + " p " +
+						  " ON " + "n." + tables.project.fields.id + " = " + "p." + tables.relUserProject.fields.projectId + 
+						  " WHERE p." + tables.relUserProject.fields.userId + " = ?", [user.userId], function(err, row) {
 			if (err) {
 				log("Error getting projets of user '" + user.username + "'", "err", "ProjectController.js");
+				console.log(err);
 				var msg = new modules.classes.Message();
-				msg.fromVal("project:project-list", null)
+				msg.fromVal("project:project-list", []);
 				socket.sendMessage(user.client, msg);
 			}
 			else {
@@ -33,7 +34,7 @@ module.exports = function() {
 				var data = [];
 				var msg = new modules.classes.Message();
 				for (var i = 0; i < row.length; i++) {
-					data.push({projectName: row[i].projectName, lastEditDate: row[i].lastEditDate, isFolder: row[i].isFolder, projectId: row[i].projectId, permissionLevel: row[i].permissionLevel, userColor: row[i].userColor});
+					data.push({projectName: row[i].projectName, lastEditDate: row[i].lastEditDate, projectId: row[i].projectId, permissionLevel: row[i].permissionLevel, userColor: row[i].userColor});
 				}
 				msg.fromVal("project:project-list", data);
 				socket.sendMessage(user.client, msg);

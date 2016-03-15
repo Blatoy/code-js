@@ -12,7 +12,7 @@ module.exports = {
 				isFolder: "CreationDate",
 				isDeleted: "DeletionDate",
 				creationDate: "CreationUserId",
-				lastEditionDate: "DeletionUserId",
+				deletionUserId: "DeletionUserId",
 				deletionDate: "Description"				
 			}
 		},
