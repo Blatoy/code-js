@@ -36,8 +36,8 @@ var Login = function(){
 			modules.socket.sendMessage(msg);
 	}
 	
-    this.handleLoginAttempt = function(success) {
-        if(success) {
+    this.handleLoginAttempt = function(data) {
+        if(data.success) {
             changePage("project-manager");
         }
         else {
@@ -88,10 +88,10 @@ var Login = function(){
     this.handleMessage = function(message) {
         switch(message.type) {
             case "login-attempt":
-                modules.login.handleLoginAttempt(message.data);
+                modules.login.handleLoginAttempt(message.data.success);
                 break;
             case "inscription-status":
-                modules.login.handleInscriptionAttempt(message.data);
+                modules.login.handleInscriptionAttempt(message.data.success);
                 break;
         }
     };
