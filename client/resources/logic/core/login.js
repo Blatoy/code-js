@@ -33,12 +33,15 @@ var Login = function(){
 			msg.fromVal("login:create-account", {pass: $("#login-password").val(), username: $("#login-username").val()});
 		else
 			msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
-			modules.socket.sendMessage(msg);
+		modules.socket.sendMessage(msg);
 	}
 	
-    this.handleLoginAttempt = function(data) {
-        if(data.success) {
-            changePage("project-manager");
+    this.handleLoginAttempt = function(success) {
+        if(success) {
+            changePage("project-manager", function(){
+				modules.projectManager = new projectManager();
+				modules.projectManager.init();
+			});
         }
         else {
             $("#login-password").val("");

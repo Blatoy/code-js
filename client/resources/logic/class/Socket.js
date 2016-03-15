@@ -40,11 +40,14 @@ var Socket = function() {
 	this.handleMessage = function(message) {
 		var msg = new Message();
         msg.fromJSON(message.data);
+
         
         var messageType = msg.type.split(":");
         msg.type = messageType[1];
          
-        
+		if(msg.type != "ping")
+			console.log(msg);
+		
 		switch (messageType[0]) {
 			case "login":
                 modules.login.handleMessage(msg);
@@ -65,6 +68,8 @@ var Socket = function() {
 	};
 	
 	this.sendMessage = function(message) {
+		if(message.type != "global:pong")
+			console.log(message);
 		this.ws.send(JSON.stringify({data:message.data, type:message.type}));
 	};
 }
