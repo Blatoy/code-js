@@ -55,6 +55,9 @@ var Socket = function() {
             case "connecting":
                 modules.connecting.handleMessage(msg);
                 break;
+			case "project":
+                modules.projectManager.handleMessage(msg);
+                break;
             case "global":
                 switch(msg.type) {
                     case "ping":
