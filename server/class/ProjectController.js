@@ -20,11 +20,11 @@ module.exports = function() {
 				user.projects = [null];
 			}
 			else {
-				log("Error getting projets of user '" + client.username + "'", "err", "ProjectController.js");
+				log("Successfully got projects of user '" + client.username + "'", "info", "ProjectController.js");
 				user.projects = row;
 			}
 		});
-	}
+	};
 	
 	this.createFolder = function(folderName) {
 		this.fs.mkdir(modules.config.paths["projects"] + folderName, function(err) {
