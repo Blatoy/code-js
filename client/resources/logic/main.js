@@ -5,6 +5,7 @@
 
 var modules = {};
 var currentPage;
+var isServerReady = false;
 
 function init() {
 	// Include the paths config
@@ -15,15 +16,15 @@ function init() {
 			changePage("connecting", function(){
 				modules.connecting = new Connecting();
 				modules.connecting.init();
+				console.log(CONFIG_SERVER["DEFAULT_IP"]);
+				$("#server-connection").hide();
+				$("#selectIP").val(CONFIG_SERVER["DEFAULT_IP"]);
 			});
 		});
 		
 		$.getScript(CONFIG_PATHS["config"] + "default-server.js", function() {
 			$.getScript(CONFIG_PATHS["class"] + "Socket.js", function() {
-				modules.socket = new Socket();
-				modules.socket.init();
-				modules.socket.ws.onmessage = function(msg){modules.socket.handleMessage(msg)};
-				setInterval(function(){modules.socket.handleStateChange()}, 50);
+				isServerReady = true;
 			});
 			$.getScript(CONFIG_PATHS["class"] + "Message.js", function() {
 				

@@ -1,8 +1,13 @@
 <div id="page-header"></div>
 <div id="page-content">
 	<div id="connection-status">
-		<div id="connection-text" class="blinking">Connecting to the server</div>
-        <a id="connection-retry" href="">Retry</a><br>
-		<img id="connection-image" class="loading" src="http://static.tumblr.com/8556513e0101599535d641a1acbc8f5e/olgrml7/Xvdnfs0x3/tumblr_static_etpthym42q048s844skg4cggg.gif">
+		<div id="server-connection">
+			<div id="connection-text" class="blinking">Connecting to the server</div>
+			<img id="connection-image" class="loading" src="http://static.tumblr.com/8556513e0101599535d641a1acbc8f5e/olgrml7/Xvdnfs0x3/tumblr_static_etpthym42q048s844skg4cggg.gif">
+		</div>
+		<div id="connect-area">
+			<input id="selectIP" type="text" onfocus="$(this).select();"></input>
+			<input id="connect-button" type="button" value="Connect">
+		</div>
 	</div>
 </div>

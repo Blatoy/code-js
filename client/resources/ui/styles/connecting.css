@@ -4,6 +4,24 @@
 	margin-top: 50px;
 }
 
+#connect-area {
+	margin: 0 auto;
+	margin-top: 30px;
+    width: 25%;
+	display: block;
+}
+
+#selectIP {
+	width: 100%;
+	display: block;
+}
+
+#connect-button {
+	width: 30%;
+	margin-top: 30px;
+	float: right;
+}
+
 #connection-text {
     color:green;
 	font-size: 32px;

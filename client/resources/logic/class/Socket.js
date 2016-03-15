@@ -30,6 +30,8 @@ var Socket = function() {
                 this.isConnected = false;
 				changePage("connecting", function(){
 					modules.connecting.displayError();
+					$("#connect-area").show();
+					$("#server-connection").show();
 				});
 				break;
 		}
