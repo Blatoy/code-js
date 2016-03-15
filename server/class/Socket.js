@@ -22,6 +22,9 @@ module.exports = function() {
 			case "login":
                 cores.login.handleMessage(message, client);
 				break;
+			case "project":
+				cores.projectManager.handleMessage(message, client);
+				break;
             case "global":
                 switch(message.type) {
                     case "pong":

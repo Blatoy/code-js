@@ -12,6 +12,7 @@ module.exports = function(client, clientId) {
     this.isConnected = false;
 	this.userId;
 	this.username;
+	this.inscriptionDate;
 	this.lastConnection;
 	this.avatarURL;
 	this.lastModified; // ()

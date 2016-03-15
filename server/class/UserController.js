@@ -29,15 +29,16 @@ module.exports = function() {
                 
                 if(row) {
                     if(row[tables.user.fields.pass] == userInformation.pass) {
-                        loggedSuccessful = true;
                         controller.userController.initUser(user, row);
-                        msg.fromVal("login:login-attempt", true);
+                        loggedSuccessful = true;
+                        msg.fromVal("login:login-attempt", {userId: user.userId, username: user.username, avatarURL: user.avatarURL, 
+						inscriptionDate: user.inscriptionDate, lastConnection: user.lastConnection, success: true});
                         log("Login attempt successful (" + userInformation.username + ")", "info", "UserController.js");
                     }
                 }
                 
                 if(!loggedSuccessful) {
-                    msg.fromVal("login:login-attempt", false);
+					msg.fromVal("login:login-attempt", {success: false});
                     log("Login attempt failed (" + userInformation.username + ")", "warn", "UserController.js");
                 }
 
@@ -99,6 +100,7 @@ module.exports = function() {
         user.userId = row[tables.user.fields.userId];
         user.username = row[tables.user.fields.username];
         user.avatarURL = row[tables.user.fields.avatarURL];
+		user.inscriptionDate = row[tables.user.fields.inscriptionDate];
 		user.lastConnection = new Date().getTime();
         user.isConnected = true;
 		
