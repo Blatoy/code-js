@@ -17,11 +17,15 @@ module.exports = function() {
 		database.getArray("SELECT * FROM " + tables.relUserProject.name + " WHERE " + tables.user.fields.userId + " = ?", client.userId, function(err, row) {
 			if (err) {
 				log("Error getting projets of user '" + client.username + "'", "err", "ProjectController.js");
-				user.projects = [null];
+				var msg = new modules.classes.Message();
+				msg.fromVal("project:project-list", null)
+				modules.socket.sendMessage(client, msg);
 			}
 			else {
 				log("Successfully got projects of user '" + client.username + "'", "info", "ProjectController.js");
-				user.projects = row;
+				var msg = new modules.classes.Message();
+				msg.fromVal("project:project-list", row)
+				modules.socket.sendMessage(client, msg);
 			}
 		});
 	};
