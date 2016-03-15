@@ -14,18 +14,19 @@ module.exports = function() {
 	};
 	
 	this.getProjectList = function(client) {
-		database.getArray("SELECT * FROM " + tables.relUserProject.name + " WHERE " + tables.user.fields.userId + " = ?", client.userId, function(err, row) {
+		user = controller.userController.getUser(client);
+		database.getArray("SELECT * FROM " + tables.relUserProject.name + " WHERE " + tables.user.fields.userId + " = ?", user.userId, function(err, row) {
 			if (err) {
-				log("Error getting projets of user '" + client.username + "'", "err", "ProjectController.js");
+				log("Error getting projets of user '" + user.username + "'", "err", "ProjectController.js");
 				var msg = new modules.classes.Message();
 				msg.fromVal("project:project-list", null)
-				modules.socket.sendMessage(client, msg);
+				socket.sendMessage(user.client, msg);
 			}
 			else {
-				log("Successfully got projects of user '" + client.username + "'", "info", "ProjectController.js");
+				log("Successfully got projects of user '" + user.username + "'", "debug", "ProjectController.js");
 				var msg = new modules.classes.Message();
 				msg.fromVal("project:project-list", row)
-				modules.socket.sendMessage(client, msg);
+				socket.sendMessage(user.client, msg);
 			}
 		});
 	};
