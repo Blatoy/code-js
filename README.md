@@ -1,6 +1,6 @@
 # code-js
 
-Online and "multiplayer" text editor
+Multi-user workspace
 
 CIFOM-ET, 2400 Le Locle, Switzerland
 

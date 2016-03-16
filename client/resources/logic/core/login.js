@@ -6,6 +6,9 @@ var Login = function(){
 		$("#login-button").on("click", this.login);
 		$("#login-sign-up").on("click", this.toggleSignUp);
 		$("#repeat-password-area").toggle();
+        $("#login-username").focus();
+        $("#signup-area").hide();
+        
         $("#login-username, #login-password, #login-password-repeat").on("keyup", function(e){
 			var disableButton = true;
 			if($("#repeat-password-area").is(':visible')) {
@@ -25,6 +28,13 @@ var Login = function(){
             if(e.keyCode == 13 && !disableButton)
                 $("#login-button").click();
         });
+        
+        if(CONFIG_GLOBAL.debugEnabled) {
+            $("#login-username").val(CONFIG_GLOBAL.debugUser);
+            $("#login-password").val(CONFIG_GLOBAL.debugPass);
+            $("#login-button").click();
+        }
+        
 	}
 	
 	this.login = function() {
@@ -87,6 +97,16 @@ var Login = function(){
 		}
 	}
     
+    this.displaySignIn = function() {
+        // Wait for the page to load
+        setTimeout(function(){
+            if($("#signup-area").length)
+                $("#signup-area").show();
+            else
+                modules.login.displaySignIn();
+        }, 50);
+    }
+    
     // Handle sockets messages
     this.handleMessage = function(message) {
         switch(message.type) {
@@ -95,6 +115,9 @@ var Login = function(){
                 break;
             case "inscription-status":
                 modules.login.handleInscriptionAttempt(message.data.success);
+                break;
+            case "enable-signin":
+                this.displaySignIn();
                 break;
         }
     };

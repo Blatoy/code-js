@@ -13,6 +13,11 @@ module.exports = function() {
 	
 	this.createClient = function(client) {
 		this.users.push(new modules.classes.User(client, userCount++));
+        if(modules.config.global.signupEnabled) {
+            var msg = new modules.classes.Message();
+            msg.fromVal("login:enable-signin", "");
+            socket.sendMessage(client, msg);
+        }
 		log("New connection (CID: " + userCount + ")", "info", "UserController.js");
 	};
 	
@@ -49,7 +54,9 @@ module.exports = function() {
 	
 	this.createAccount = function(userInformation, client) {
 		var msg = new modules.classes.Message();
-		
+		if(!modules.config.global.signupEnabled)
+            return;
+        
 		if(userInformation.pass.length > 2 && userInformation.username.length > 2) {
 			database.execPrep(
 				" INSERT INTO " + tables.user.name + 

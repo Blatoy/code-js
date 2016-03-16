@@ -1,7 +1,15 @@
 #connection-status {
 	width:100%;
 	text-align:center;
-	margin-top: 50px;
+    margin: 0 auto;
+	margin-top: 25px;
+}
+
+#connection-information {
+    text-align: left;
+    width: 25%;
+    display: inline-block;
+    color: #666;
 }
 
 #connect-area {

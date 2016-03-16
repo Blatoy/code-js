@@ -1,6 +1,11 @@
 #login-form {
 	margin: 0 auto;
-	width: 45%;
+	width: 25%;
+}
+
+#login-help {
+    margin-top: 25px;
+    color:#666;
 }
 
 label {

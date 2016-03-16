@@ -79,6 +79,12 @@ input[type="email"]:invalid, input[type="text"]:invalid, input[type="password"]:
 	box-shadow: 0 2px 2px -2px orangered;
 }
 
+input[type="email"]:disabled, input[type="text"]:disabled, input[type="password"]:disabled  {
+	border-bottom: 2px solid gray;
+	box-shadow: 0 2px 2px -2px gray;
+    color: #666;
+}
+
 input[type="button"], button {
 	box-sizing: border-box;
 	font-size: 16px;

@@ -22,7 +22,6 @@ var Socket = function() {
                 this.isConnected = true;
                 this.hasConnectionSucceed = true;
 				changePage("login", function(){
-					modules.login = new Login();
 					modules.login.init();
 				});
 				break;
@@ -30,6 +29,7 @@ var Socket = function() {
                 this.isConnected = false;
 				changePage("connecting", function(){
 					modules.connecting.displayError();
+                    modules.connecting.init();
 					$("#connect-area").show();
 					$("#server-connection").show();
 				});
