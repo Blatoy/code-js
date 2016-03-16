@@ -13,18 +13,25 @@ module.exports = function() {
 	
 	this.createClient = function(client) {
 		this.users.push(new modules.classes.User(client, userCount++));
+		log("New connection (CID: " + userCount + ")", "info", "UserController.js");
         if(modules.config.global.signupEnabled) {
             var msg = new modules.classes.Message();
             msg.fromVal("login:enable-signin", "");
             socket.sendMessage(client, msg);
         }
-		log("New connection (CID: " + userCount + ")", "info", "UserController.js");
+        var msg = new modules.classes.Message();
+        msg.fromVal("login:server-name", modules.config.global.serverName);
+        socket.sendMessage(client, msg);
 	};
 	
     
 	this.login = function(userInformation, client) {
         var user = this.getUser(client);
-        
+        if(user.isConnected); {
+            log("Login attempt failed (" + userInformation.username + ")", "warn", "UserController.js");
+            return;
+        }
+
         database.getSingle(
             " SELECT * FROM " + tables.user.name + 
             " WHERE " + tables.user.fields.username + " = ?", [userInformation.username], 

@@ -106,6 +106,18 @@ var Login = function(){
                 modules.login.displaySignIn();
         }, 50);
     }
+
+    this.displayServerName = function(name) {
+        // Wait for the page to load
+        setTimeout(function(){
+            if($("#server-name").length)
+                $("#server-name").text(name);
+            else
+                modules.login.displayServerName(name);
+        }, 50);
+    }
+
+    
     
     // Handle sockets messages
     this.handleMessage = function(message) {
@@ -118,6 +130,9 @@ var Login = function(){
                 break;
             case "enable-signin":
                 this.displaySignIn();
+                break;
+            case "server-name":
+                this.displayServerName(message.data);
                 break;
         }
     };

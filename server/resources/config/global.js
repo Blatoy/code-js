@@ -8,7 +8,7 @@ module.exports = {
     pingInterval: 5000,
     pingMax: 5000,
     signupEnabled: true,
-    serverName: "CodeJS Test Server",
+    serverName: "Test server",
     debug: true,
     version: 0.1
 }
