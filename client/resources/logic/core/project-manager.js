@@ -10,12 +10,13 @@ var projectManager = function() {
 			$("#file-content").text("There's nothing here.");
 		}
 		else {
-			for(var i = 0; i++; i < data.length) {
-				var imageType = data.isFolder ? "folder" : "file";
+			for(var i = 0; i < data.length; i++) {
+				var imageType = data[0].isFolder ? "folder" : "file";
+				console.log(imageType);
 				$("#file-content").html('<div class="file">' + 
-					'<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + folder + '-image"/></span>' + 
-					'<span class="file-title">' + data.projectName + '</span>' + 
-					'<span class="file-last-modification">' + data.lastEditDate + '</span>' + 
+					'<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + imageType + '-image"/></span>' + 
+					'<span class="file-title">' + data[0].projectName + '</span>' + 
+					'<span class="file-last-modification">' + data[0].lastEditDate + '</span>' + 
 					'<span class="file-working-people">' + Math.round(Math.random() * 20) + '</span>' + 
 				'</div>');
 			}
