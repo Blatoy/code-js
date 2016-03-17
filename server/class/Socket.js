@@ -14,7 +14,8 @@ module.exports = function() {
 	};
 	
 	this.handleMessage = function(message, client) {
-        log(pad("["+ controller.userController.getUser(client).getDebugName() +"]", 10) + "["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
+		if (message.type != "global:pong") 
+			log(pad("["+ controller.userController.getUser(client).getDebugName() +"]", 10) + "["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
         var messageType = message.type.split(":");
         message.type = messageType[1];
          

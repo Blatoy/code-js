@@ -27,10 +27,10 @@ module.exports = function() {
     
 	this.login = function(userInformation, client) {
         var user = this.getUser(client);
-        if(user.isConnected); {
+        /*if(user.isConnected); {
             log("Login attempt failed (" + userInformation.username + ")", "warn", "UserController.js");
             return;
-        }
+        }*/
 
         database.getSingle(
             " SELECT * FROM " + tables.user.name + 
