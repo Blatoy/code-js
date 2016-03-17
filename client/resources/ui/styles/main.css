@@ -119,6 +119,29 @@ input {
     outline: none;
 }
 
+.context-menu {
+	padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: fixed;
+	border-radius: 1px;
+    z-index: 9999;
+	border: 1px solid #e3e3e3;
+	box-shadow: 2px 1px 2px #eee;
+	background-color: #fefefe;
+	font-size: 15px;
+    min-width: 100px;
+    color: #666;
+}
+
+.context-menu-item {
+    cursor:pointer;
+}
+
+.context-menu-item:hover {
+    color:black;
+}
+
 /*	--------------------------- TOOLS CLASSES ----------------------------*/
 
 .inline {

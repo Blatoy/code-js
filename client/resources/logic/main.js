@@ -1,11 +1,17 @@
 // main.js (client)
 // handle the initialisation of the program
 
+// rip
 "use strict";
 
 var modules = {};
 var currentPage;
 var isServerReady = false;
+// Save the mouse position
+var mouse = {x: 0, y:0};
+// Prevent the display of multiple context menu
+var contextMenuLocked = false;
+
 
 function init() {
 	// Include the paths config
@@ -18,7 +24,9 @@ function init() {
             
             $.getScript(CONFIG_PATHS["class"] + "Message.js");
             $.getScript(CONFIG_PATHS["class"] + "Socket.js");
+            $.getScript(CONFIG_PATHS["class"] + "ContextMenu.js");
             
+            // Change the page connecting when the file is loaded
             $.getScript(CONFIG_PATHS["core"] + "connecting.js", function(){
 				modules.connecting = new Connecting();
                 changePage("connecting", function(){
@@ -41,40 +49,39 @@ function init() {
             });
 		});
 		
-		$.getScript(CONFIG_PATHS["config"] + "default-server.js", function() {
-			$.getScript(CONFIG_PATHS["class"] + "Socket.js", function() {
-				isServerReady = true;
-			});
-			$.getScript(CONFIG_PATHS["class"] + "Message.js", function() {
-				
-			});
-		});
+		$.getScript(CONFIG_PATHS["config"] + "default-server.js", function() {});
 	});
 }
 
 
 // Probably a good idea to move on a tool.js
 function loadStyles(styles) {
+    // Convert to array if needed
     if(typeof styles != "array")
         styles = [styles];
+    // Add the styles
     for(var i = 0; i < styles.length; i++) {
         $("head").append('<link rel="stylesheet" href="' + styles[i] + '.css" type="text/css" />');
     }
 }
 
+// Load all the scripts
 function loadScripts(scripts, callback) {
     if(typeof scripts != "array")
         scripts = [scripts];
         
+    // Used to callback
     var elementLoaded = 0;
     var elementToLoad = scripts.length;
     
 	var onLoadFinished = function() {
+        // Increment, if all loaded, callback();
 		if(++elementLoaded == elementToLoad)
 			if(callBack)
 				callBack();
 	};
     
+    // Import the scripts
     for(var i = 0; i < scripts.length; i++) {
         $.getScript(CONFIG_PATHS["core"] + fileName + ".js", onLoadFinished);
     }
@@ -86,7 +93,9 @@ function changePage(fileName, callBack) {
 	var elementLoaded = 0;
     
 	var onLoadFinished = function() {
+        // Increment, if all loaded, callback();
 		if(++elementLoaded == elementToLoad) {
+            // Display the page with an effect
             $("#page-content").hide();
             $("#page-content").fadeIn();
 			if(callBack)
@@ -94,6 +103,7 @@ function changePage(fileName, callBack) {
 		}
 	}
     
+    // If it's already the current page, callback();
     if(currentPage == fileName) {
         if(callBack)
             callBack();
@@ -115,6 +125,7 @@ function changePage(fileName, callBack) {
 
     currentPage = fileName;
 	
+    // TODO: Move to loadStyle([]); when needed
 	/*$.getScript(CONFIG_PATHS["core"] + fileName + ".js", onLoadFinished);
 	if (fileName == "editor") {
 		$("head").append('<script src="'+CONFIG_PATHS["tools"]+'codemirror-5.12/lib/codemirror.js"></script>');
@@ -125,6 +136,12 @@ function changePage(fileName, callBack) {
 	}
 	
     */
+}
+
+// Update the mouse position
+document.onmousemove = function(e){
+    mouse.x = (e.clientX || e.pageX); 
+    mouse.y = (e.clientY || e.pageY);
 }
 
 init();

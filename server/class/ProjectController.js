@@ -42,6 +42,14 @@ module.exports = function() {
 		});
 	};
 	
+    this.createFile = function() {};
+    
+    this.removeFile = function() {};
+    
+    this.renameFile = function() {};
+    
+    this.createProject = function(){};
+    
 	this.createFolder = function(folderName) {
 		this.fs.mkdir(modules.config.paths["projects"] + folderName, function(err) {
 			if (err)
