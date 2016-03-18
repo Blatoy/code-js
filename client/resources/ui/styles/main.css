@@ -142,8 +142,57 @@ input {
     color:black;
 }
 
+.dialog-box {
+    position: fixed;
+	border-radius: 1px;
+    z-index: 8888;
+	border: 1px solid #e3e3e3;
+	box-shadow: 0px 1px 1px #eee;
+	background-color: #fefefe;
+	font-size: 15px;
+    min-width: 100px;
+	padding: 20px;
+	left: 50%;
+	width: 60%;
+	margin-left: calc(-30% - 10px);
+	margin-top: 100px;
+}
+
+.dialog-box-title {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.shadow-box {
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(5, 5, 5, 0.5);
+}
+
+hr {
+	border: none;
+	height: 1px;
+	background-color: #eee;
+}
+
 /*	--------------------------- TOOLS CLASSES ----------------------------*/
 
 .inline {
 	display: inline-block;
+}
+
+.smallSize {
+	width: 50% !important;
+}
+
+.user {
+	text-align: left;
+	float: right;
+	padding: 5px;
+	background-color: white;
+	width: calc(50% - 10px);
+	border: 1px solid #e3e3e3;
 }

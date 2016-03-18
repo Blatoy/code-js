@@ -25,6 +25,7 @@ function init() {
             $.getScript(CONFIG_PATHS["class"] + "Message.js");
             $.getScript(CONFIG_PATHS["class"] + "Socket.js");
             $.getScript(CONFIG_PATHS["class"] + "ContextMenu.js");
+            $.getScript(CONFIG_PATHS["class"] + "DialogBox.js");
             
             // Change the page connecting when the file is loaded
             $.getScript(CONFIG_PATHS["core"] + "connecting.js", function(){
