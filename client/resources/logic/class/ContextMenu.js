@@ -11,8 +11,9 @@ var ContextMenu = function() {
     // Display the context menu
     this.display = function(x, y) {
         // Check if there's no other context menu
-        if(contextMenuLocked)
-            return;
+        if(contextMenuLocked) {
+			$(".context-menu").remove();
+		}
             
         // Prevent to create multiple context menu
         contextMenuLocked = true;
