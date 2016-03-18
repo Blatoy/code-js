@@ -120,9 +120,6 @@ input {
 }
 
 .context-menu {
-	padding: 5px;
-    padding-left: 20px;
-    padding-right: 20px;
     position: fixed;
 	border-radius: 1px;
     z-index: 9999;
@@ -136,6 +133,9 @@ input {
 
 .context-menu-item {
     cursor:pointer;
+	padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;	
 }
 
 .context-menu-item:hover {
