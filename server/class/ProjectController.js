@@ -22,6 +22,7 @@ module.exports = function() {
 		var date = new Date().getTime();
 		var data;
 		var isProjectAdded;
+		var addedProjectId;
 		
 		// Add project to database
 		database.execPrep(
@@ -45,29 +46,51 @@ module.exports = function() {
 		});
 		
 		// Get project id
-		
+		addedProjectId = this.getProjectId(projectName, creator.userId);
 		
 		// Add relation between the users and the project
+		projectUsers.push({userId: creator.userId, permissionLevel: 3});
 		if (isProjectAdded) {
-			for (var i = 0; i < projectUsers[0].length; i++) {
+			for (var i = 0; i < projectUsers.length; i++) {
 				database.execPrep(
 					" INSERT INTO " + tables.relUserProject.name + 
 					" (" + tables.relUserProject.fields.userId + ", " + tables.relUserProject.fields.projectId + ", " + tables.relUserProject.fields.permissionLevel + 
 					", " + tables.relUserProject.fields.userColor + ")" + 
-					" VALUES (?,?,?,?)", [projectUsers[0][i].userId, /* projectId */, projectUsers[1][i], '#'+Math.floor(Math.random()*16777215).toString(16)], function(err){
+					" VALUES (?,?,?,?)", [projectUsers[i].userId, addedProjectId, projectUsers[i].premissionLevel, '#'+Math.floor(Math.random()*16777215).toString(16)], function(err){
 						if(!err) {
 							msg.fromVal("project:add-project", data);
-							socket.sendMessage(controller.userController.getClientByUserId(projectUsers[0][i].userId), msg);
+							socket.sendMessage(controller.userController.getClientByUserId(projectUsers[i].userId), msg);
 							log("Successfully added user to project " + projectName + "!", "info", "ProjectController.js");
 						}
 						else {
 							msg.fromVal("project:add-project", {success: false});
-							socket.sendMessage(controller.userController.getClientByUserId(projectUsers[0][i].userId), msg);
+							socket.sendMessage(controller.userController.getClientByUserId(projectUsers[i].userId), msg);
 							log("Could not add user to project " + projectName + "!", "info", "ProjectController.js");
 						}
 				});
 			}
 		}
+		
+		// Create project on drive
+		if (isProjectAdded) {
+			this.createProjectOnDrive(creator.userId, addedProjectId);
+		}
+	};
+	
+	this.getProjectId = function(projectName, creationUserId) {
+		database.getSingle(
+            " SELECT " + tables.project.fields.projectId + "as 'projectId' FROM " + tables.project.name,
+            function(err, row) {
+				if (err) {
+					return -1;
+					log("Failed to get project id!", "err", "ProjectController.js");
+				}
+                if (row) {
+					return row.projectId;
+					log("Success at getting all users!", "debug", "ProjectController.js");
+                }
+            }
+        );
 	};
 	
 	this.getProjectList = function(client) {
@@ -107,8 +130,8 @@ module.exports = function() {
     
     this.createProject = function(){};
     
-	this.createFolder = function(folderName) {
-		this.fs.mkdir(modules.config.paths["projects"] + folderName, function(err) {
+	this.createProjectOnDrive = function(creatorId, projectId) {
+		this.fs.mkdir(modules.config.paths["projects"] + creatorId + "_" + projectId, function(err) {
 			if (err)
 				log("Error creating " + folderName, "err", "ProjectController.js");
 			else 

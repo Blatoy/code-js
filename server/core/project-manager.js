@@ -8,10 +8,10 @@ module.exports = function() {
 				controller.projectController.getProjectList(client);
 				break;
 			case "get-all-users":
-				controller.userController.getAllUsers(client, message.data.projectId);
+				controller.userController.getAllUsers(client);
 				break;
             case "get-files":
-				controller.fileController.getProjectFiles(message.data.projectId);
+				controller.fileController.getProjectFiles(client, message.data.projectId);
                 // idProject
                 // Return all files from a project
                 // Check if user has access!

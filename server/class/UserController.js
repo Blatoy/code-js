@@ -121,13 +121,12 @@ module.exports = function() {
             " SELECT " + tables.user.fields.username + " as 'username', " + tables.user.fields.avatarURL + " as 'avatarURL' FROM " + tables.user.name, [],
             function(err, row) {
 				if (err) {
-					log("Failed getting all users!", "err", "UserController.js");
+					log("Failed to get all users!", "err", "UserController.js");
 				}
                 if (row) {
 					var data = [];
 					var msg = new modules.classes.Message();
 					for (var i = 0; i < row.length; i++) {
-						console.log(row[i]);
 						data.push({username: row[i].username, avatarURL: row[i].avatarURL});
 					}
 					log("Success at getting all users!", "debug", "UserController.js");
