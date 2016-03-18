@@ -64,7 +64,8 @@ function init() {
 		
 		// Listening for any message
 		client.on("message", function(data) {
-			var message = new modules.classes.Message(JSON.parse(data));
+			var message = new modules.classes.Message();
+			message.fromJSON(data);
 			socket.handleMessage(message, client);
 		});
 	});

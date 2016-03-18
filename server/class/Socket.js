@@ -14,26 +14,28 @@ module.exports = function() {
 	};
 	
 	this.handleMessage = function(message, client) {
-		if (message.type != "global:pong") 
-			log(pad("["+ controller.userController.getUser(client).getDebugName() +"]", 10) + "["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
-        var messageType = message.type.split(":");
-        message.type = messageType[1];
-         
-		switch (messageType[0]) {
-			case "login":
-                cores.login.handleMessage(message, client);
-				break;
-			case "project":
-				cores.projectManager.handleMessage(message, client);
-				break;
-            case "global":
-                switch(message.type) {
-                    case "pong":
-                        controller.userController.getUser(client).handlePong();
-                        break;
-                }
-                break;
-		}
+		try {
+			if (message.type != "global:pong") 
+				log(pad("["+ controller.userController.getUser(client).getDebugName() +"]", 10) + "["+message.type+"] " + JSON.stringify(message.data), "debug", "Socket.js");
+			var messageType = message.type.split(":");
+			message.type = messageType[1];
+			 
+			switch (messageType[0]) {
+				case "login":
+					cores.login.handleMessage(message, client);
+					break;
+				case "project":
+					cores.projectManager.handleMessage(message, client);
+					break;
+				case "global":
+					switch(message.type) {
+						case "pong":
+							controller.userController.getUser(client).handlePong();
+							break;
+					}
+					break;
+			}
+		} catch (e) {}
 	};
 	
 	this.sendMessage = function(client, message) {

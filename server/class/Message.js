@@ -4,7 +4,7 @@ DESCRIPTION: Socket message handler
 */
 
 module.exports = function(message) {
-	if(message) {
+	if (message) {
 		this.data = message.data;
 		this.type = message.type;
 	}

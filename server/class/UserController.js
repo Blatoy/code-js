@@ -127,6 +127,7 @@ module.exports = function() {
 					var data = [];
 					var msg = new modules.classes.Message();
 					for (var i = 0; i < row.length; i++) {
+						console.log(row[i]);
 						data.push({username: row[i].username, avatarURL: row[i].avatarURL});
 					}
 					log("Success at getting all users!", "debug", "UserController.js");

@@ -44,7 +44,10 @@ module.exports = function() {
 				}
 		});
 		
-		// 
+		// Get project id
+		
+		
+		// Add relation between the users and the project
 		if (isProjectAdded) {
 			for (var i = 0; i < projectUsers[0].length; i++) {
 				database.execPrep(
