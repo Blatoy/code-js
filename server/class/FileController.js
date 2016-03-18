@@ -21,7 +21,7 @@ module.exports = function() {
 			tables.file.fields.deletionDate + " as 'deletionDate', " + tables.file.fields.parentFolderId + " as 'parentFolderId', " +
 			tables.file.fields.creationUserId + " as 'creationUserId', " + tables.file.fields.editionUserId + " as 'editionUserId', " + 
 			tables.file.fields.deletionUserId + " as 'deletionUserId' FROM " + tables.file.name +
-			" WHERE " tables.file.fields.projectId + " = ?", [projectId],
+			" WHERE " + tables.file.fields.projectId + " = ?", [projectId],
             function(err, row) {
 				if (err) {
 					log("Failed to project's files!", "err", "FileController.js");
