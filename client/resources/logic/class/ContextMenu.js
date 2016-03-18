@@ -18,7 +18,7 @@ var ContextMenu = function() {
         contextMenuLocked = true;
         
         // Hide all previous context menu
-        $(".context-menu").hide();
+        $(".context-menu").remove();
         
         // Set the position
         // TODO: Check max x / y
@@ -58,7 +58,7 @@ var ContextMenu = function() {
 
 // On document click, hide all the context menu
 $(document).click(function(e) {
-    $(".context-menu").hide(); 
+    $(".context-menu").remove(); 
     contextMenuLocked = false;
 });
 

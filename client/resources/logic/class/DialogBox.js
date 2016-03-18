@@ -19,8 +19,8 @@ var DialogBox = function() {
 		
 		// On document click, hide all the context menu
 		$(shadowBox).click(function(e) {
-			$(".shadow-box").hide(); 
-			$(".dialog-box").hide(); 
+			$(".shadow-box").remove(); 
+			$(".dialog-box").remove(); 
 		});
 
     }

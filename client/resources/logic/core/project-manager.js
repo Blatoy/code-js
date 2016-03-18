@@ -46,8 +46,8 @@ var projectManager = function() {
 				"<input class='smallSize' type='text'/ placeholder='Project name'>" + 
 				"<br><br><input class='smallSize' type='text'/ placeholder='Project description'>" + 
 			"</div>" + 
-			"<div style='float:right;width:50%;text-align:right;padding-bottom: 10px;'>" + 
-				"<input class='smallSize' type='text'/ placeholder='Search a user...'>" + 
+			"<div id='create-project-users'>" + 
+				"<input style='margin-bottom: 10px; width:100%;' type='text'/ placeholder='Search a user...'>" + 
 				"<div id='userList'></div>" + 
 			"</div><input type='button' onclick='' value='Create the project'>"
 		, "Create a project");
