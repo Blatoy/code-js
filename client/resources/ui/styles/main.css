@@ -57,6 +57,11 @@ a:visited {
 	color: #4da6ff;
 }
 
+textarea {
+	border: 1px solid #eee;
+	border-radius: 2px;
+}
+
 input[type="email"], input[type="text"], input[type="password"]  {
 	font-size: 16px;
 	padding: 2px;

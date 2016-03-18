@@ -2,7 +2,8 @@ var projectManager = function() {
     // Create context menu
     var createContextMenu = new ContextMenu();
     var manageContextMenu = new ContextMenu();
-
+    var createProjectUserList = [];
+    
 	this.init = function() {
         // Get the project list
         // TODO: Store the projects
@@ -42,18 +43,30 @@ var projectManager = function() {
 		modules.socket.sendMessage(msg);
 		
 		dialogBox.display(
-			"<div style='float:left;width:50%;margin-bottom: 20px;'>" +
+			"<div id='create-project-informations'>" +
+                "Project informations<hr>" +
 				"<input class='smallSize' type='text'/ placeholder='Project name'>" + 
-				"<br><br><input class='smallSize' type='text'/ placeholder='Project description'>" + 
+				"<br><br><textarea style='height:170px;width:100%;' placeholder='Project description'></textarea>" + 
 			"</div>" + 
 			"<div id='create-project-users'>" + 
-				"<input style='margin-bottom: 10px; width:100%;' type='text'/ placeholder='Search a user...'>" + 
+                "Add members<hr>" + 
+				"<input onkeyup='modules.projectManager.refreshCreateProjectUserList()' id='createProjectSearch' style='margin-bottom: 10px; width:96%;' type='text'/ placeholder='Search a user...'>" + 
 				"<div id='userList'></div>" + 
-			"</div><input type='button' onclick='' value='Create the project'>"
+			"</div><input type='button' value='Create the project'>"
 		, "Create a project");
 	};
 	
-	
+	this.selectUser = function(e) {
+        // TODO: Store rights as well
+        createProjectUserList[$(e.target).data("userId")].isSelected = !createProjectUserList[$(e.target).data("userId")].isSelected;
+            
+        if(e.target.className == 'username')
+            e.target = e.target.parentNode;
+        
+        if(e.target.className == 'user' || e.target.className == 'user user-selected')
+            $(e.target).toggleClass("user-selected");
+    };
+    
 	this.displayProjects = function(data) {
 		if(data.length == 0) {
 			$("#file-content").text("There's nothing here.");
@@ -83,17 +96,48 @@ var projectManager = function() {
 		}
 	};
   
-	
+	this.refreshCreateProjectUserList = function() {
+        $("#userList").html("");
+
+        for(var i = 0; i < createProjectUserList.length; i++) {
+            
+            if($("#createProjectSearch").val() != "") {
+                if(createProjectUserList[i].username.toLowerCase().indexOf($("#createProjectSearch").val().toLowerCase()) == -1)
+                    continue;
+            }
+            
+            var element = $("<div>");
+            element.addClass("user");
+            
+            if(createProjectUserList[i].isSelected)
+                element.addClass("user-selected");
+                
+            element.on("click", function(e){modules.projectManager.selectUser(e)});
+            element.data("userId", i);
+            element.append(
+                    "<span data-user-id='" + i + "' class='username'>" + createProjectUserList[i].username + "</span>" +
+                    "<select>" + 
+                        "<option>Read only</option>" + 
+                        "<option>Write rights</option>" + 
+                        "<option>Admin rights</option>" + 
+                    "</select>"
+            );
+                
+            $("#userList").append(element);
+        }
+        
+        if($("#userList").text() == "")
+           $("#userList").append("No results founds"); 
+    };
+    
 	this.handleMessage = function(message) {
 		switch(message.type) {
 			case "project-list":
 				this.displayProjects(message.data);
 				break;
 			case "all-users":
-				// TODO: Store users
-				for(var i = 0; i < message.data.length; i++) {
-					$("#userList").append("<div class='user'>" + message.data[i].username + "</div>");
-				}
+                createProjectUserList = message.data;
+                this.refreshCreateProjectUserList();
 				break;
 		}
 	};
