@@ -23,8 +23,7 @@ module.exports = function() {
         msg.fromVal("login:server-name", modules.config.global.serverName);
         socket.sendMessage(client, msg);
 	};
-	
-    
+	    
 	this.login = function(userInformation, client) {
         var user = this.getUser(client);
         /*if(user.isConnected); {
@@ -80,7 +79,7 @@ module.exports = function() {
                         socket.sendMessage(client, msg);
                         log("User inscription failed (data error) with username: " + userInformation.username, "err", "UserController.js");
                     }
-				});
+			});
 		}
 		else {
 			msg.fromVal("login:inscription-status", {success:true, code:2});
@@ -103,12 +102,46 @@ module.exports = function() {
 		}
 	};
 	
+	this.getClientByUserId = function(userId) {
+		for (var i = 0; i < this.users.length; i++) {
+			if (this.users[i].userId == userId)
+				return this.users[i].client;
+		}
+	};
+	
 	this.getUserByClientId = function(clientId) {
 		for (var i = 0; i < this.users.length; i++) {
 			if (this.users[i].clientId == clientId)
 				return this.users[i];
 		}
-	}
+	};
+	
+	this.getAllUsers = function(client) {
+		database.getArray(
+            " SELECT " + tables.user.fields.username + ", " + tables.user.fields.avatarURL + " FROM " + tables.user.name, [],
+            function(err, row) {
+				if (err) {
+					log("Failed getting all users!", "err", "UserController.js");
+				}
+                if (row) {
+					var data = [];
+					var msg = new modules.classes.Message();
+					for (var i = 0; i < row.length; i++) {
+						data.push({username: row[i].username, avatarURL: row[i].avatarURL});
+					}
+					log("Success at getting all users!", "debug", "UserController.js");
+					
+					if (client != null) {
+						msg.fromVal("project:all-users", data);
+						socket.sendMessage(client, msg);
+					}
+					else {
+						return data;
+					}
+                }
+            }
+        );
+	};
 	
 	this.initUser = function(user, row) {
         user.userId = row[tables.user.fields.userId];

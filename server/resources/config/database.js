@@ -9,11 +9,11 @@ module.exports = {
 			fields: {
 				id: "ProjectID",
 				name: "Name",
-				isFolder: "CreationDate",
-				isDeleted: "DeletionDate",
-				creationDate: "CreationUserId",
+				creationDate: "CreationDate",
+				deletionDate: "DeletionDate",
+				creationUserId: "CreationUserId",
 				deletionUserId: "DeletionUserId",
-				deletionDate: "Description"				
+				description: "Description"				
 			}
 		},
 		file: {

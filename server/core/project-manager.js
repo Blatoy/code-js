@@ -7,7 +7,11 @@ module.exports = function() {
 			case "get-projects":
 				controller.projectController.getProjectList(client);
 				break;
+			case "get-all-users":
+				controller.userController.getAllUsers(client, message.data.projectId);
+				break;
             case "get-files":
+				controller.fileController.getProjectFiles(message.data.projectId);
                 // idProject
                 // Return all files from a project
                 // Check if user has access!
@@ -17,7 +21,7 @@ module.exports = function() {
                 // Check if user is "project admin"
                 break;
             case "add-project":
-                // projectName, projectUsers[], description
+				controller.projectController.addProject(controller.userController.getUser(client), message.data.projectName, message.data.projectUsers, message.data.description);
                 // check if user can add
                 break;
             case "rename-project":

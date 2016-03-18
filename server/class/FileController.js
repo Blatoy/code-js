@@ -13,6 +13,10 @@ module.exports = function() {
 		this.fs = require('fs');
 	};
 	
+	this.getProjectFiles = function(projectId) {
+		
+	}
+	
 	this.createFile = function(fileName) {
 		this.fs.writeFile(modules.config.paths["projects"] + fileName, "", function(err) {
 			if (err)

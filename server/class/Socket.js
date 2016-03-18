@@ -34,13 +34,24 @@ module.exports = function() {
                 }
                 break;
 		}
-	}
+	};
 	
 	this.sendMessage = function(client, message) {
 		try {
 			client.send(JSON.stringify({type: message.type, data: message.data}));
 		} catch (e) {}
 	};
+	
+	/*
+	this.broadcastByProjectID = function(users, projectId) {		
+		// Send message
+		for (var i = 0; i < users.length; i++) {
+			if (users.)
+			try {
+				client.send(JSON.stringify({type: message.type, data: message.data}));
+			} catch (e) {}
+		}
+	};*/
 	
 	this.broadcast = function() {
 	};
