@@ -58,7 +58,7 @@ var ContextMenu = function() {
 }
 
 // On document click, hide all the context menu
-$(document).click(function(e) {
+$(document).on("click mousedown", function(e) {
     $(".context-menu").remove(); 
     contextMenuLocked = false;
 });
