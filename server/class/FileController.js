@@ -38,7 +38,7 @@ module.exports = function() {
 					log("Success at getting all project's files!", "debug", "FileController.js");
 					
 					if (client != null) {
-						msg.fromVal("project:get-files", data);
+						msg.fromVal("project:file-list", data);
 						socket.sendMessage(client, msg);
 					}
 					else {
@@ -47,15 +47,67 @@ module.exports = function() {
                 }
             }
         );
-	}
+	};
 	
-	this.createFile = function(projectId, parentFolder, fileName) {
-		this.fs.writeFile(modules.config.paths["projects"] + fileName, "", function(err) {
-			if (err)
-				log("Error creating file", "err", "FileController.js");
-			else
-				log("Successful creating file", "info", "FileController.js");
-		});
+	this.createFile = function(client, projectId, parentId, name, isFolder) {
+        var currentDate = new Date().getTime();
+        var user = controller.userController.getUser(client);
+		var msg = new Message();
+		
+		// Get permission level
+		database.getSingle(
+            " SELECT " + tables.relUserProject.fields.permissionLevel + " as 'permissionLevel' " +
+            " FROM " + tables.relUserProject.name + 
+            " WHERE " + tables.relUserProject.fields.userId + " = ? ", [user.userId],
+            function(err, row) {
+				if (err) {
+					log("Failed to get project permission level", "err", "FileController.js");
+                    console.log(err);                    
+                }
+                else {
+                   // Add file
+					database.execPrep(
+						" INSERT INTO file (Name, IsFolder, CreationDate, LastEditionDate, ParentFolderID, ProjectID, CreationUserID)" + 
+						" VALUES (?,?,?,?,?,?,?)", [name, isFolder, currentDate, currentDate, parentId, projectId, user.userId], 
+						function(err2, row2){
+							if(err2) {
+								// TODO: Check kind of error -> code number
+								msg.fromVal("project:file-created", {success: false, code: 1});
+								log("Cannot insert file '" + name + "'", "err", "FileController.js");
+								console.log(err2);
+								socket.sendMessage(user.client, msg);
+							}
+							else {
+								msg.fromVal("project:file-created", {success: true, fileName: name, permissionLevel: row.permissionLevel});
+								log("File '" + name + "' created", "debug", "FileController.js");
+								
+								// Create file on drive
+								this.createFileOnDrive(projectId, parentId, name, function(err3, row3) {
+									if (err3)
+										log("Error creating file on drive", "err", "FileController.js");
+									else {
+										log("Successful creating file on drive", "info", "FileController.js");
+										// Send message
+										socket.sendMessage(user.client, msg);										
+									}																	
+								});
+							}
+						}
+					);
+				}
+            }
+        );
+        
+        // TODO: Check rights
+        
+		
+
+       // database.execPrep("INSERT
+    };
+	
+	// TODO: GET FILE IN TREE!!!
+	this.createFileOnDrive = function(projectId, parentFolder, fileName, callback) {
+		this.fs.writeFile(modules.config.paths["projects"] + fileName, "", function(err, row){});
 	};
     
 };

@@ -33,9 +33,8 @@ var Login = function(){
             $("#login-username").val(CONFIG_GLOBAL.debugUser);
             $("#login-password").val(CONFIG_GLOBAL.debugPass);
             $("#login-button").click();
-        }
-        
-	}
+        }        
+	};
 	
 	this.login = function() {
         var msg = new Message();
@@ -44,7 +43,7 @@ var Login = function(){
 		else
 			msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
 		modules.socket.sendMessage(msg);
-	}
+	};
 	
     this.handleLoginAttempt = function(data) {
         if(data.success) {
@@ -59,7 +58,7 @@ var Login = function(){
             $("#login-password").focus();
             $("#login-password").prop("placeholder", "Password incorrect");
         }
-    }
+    };
     
     this.handleInscriptionAttempt = function(data) {
         if(data.success) {
@@ -83,7 +82,7 @@ var Login = function(){
                     break;
             }
         }
-    }
+    };
     
 	this.toggleSignUp = function() {
 		$("#login-button").prop("disabled", true);
@@ -96,7 +95,7 @@ var Login = function(){
 			$("#login-button").val("Log in");
 			$("#login-sign-up").text("Sign up");
 		}
-	}
+	};
     
     this.displaySignIn = function() {
         // Wait for the page to load
@@ -106,7 +105,7 @@ var Login = function(){
             else
                 modules.login.displaySignIn();
         }, 50);
-    }
+    };
 
     this.displayServerName = function(name) {
         // Wait for the page to load
@@ -116,9 +115,7 @@ var Login = function(){
             else
                 modules.login.displayServerName(name);
         }, 50);
-    }
-
-    
+    };
     
     // Handle sockets messages
     this.handleMessage = function(message) {

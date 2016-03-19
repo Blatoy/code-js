@@ -31,6 +31,7 @@ module.exports = function() {
             return;
         }*/
 
+		// Get user info
         database.getSingle(
             " SELECT * FROM " + tables.user.name + 
             " WHERE " + tables.user.fields.username + " = ?", [userInformation.username], 
