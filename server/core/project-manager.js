@@ -29,6 +29,7 @@ module.exports = function() {
                 // check if user is project admin, + does not already exist
                 break;
             case "add-file":
+                controller.projectController.createFile(client, message.data.projectId, message.data.parentId, message.data.name, message.data.isFolder);
                 // fileName, projectId, parentId, isFolder
                 // Check if user has access!
                 break;

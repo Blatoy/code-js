@@ -49,7 +49,7 @@ module.exports = function() {
         );
 	}
 	
-	this.createFile = function(fileName) {
+	this.createFile = function(projectId, parentFolder, fileName) {
 		this.fs.writeFile(modules.config.paths["projects"] + fileName, "", function(err) {
 			if (err)
 				log("Error creating file", "err", "FileController.js");
@@ -57,4 +57,5 @@ module.exports = function() {
 				log("Successful creating file", "info", "FileController.js");
 		});
 	};
+    
 };

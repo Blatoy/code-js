@@ -161,7 +161,7 @@ module.exports = function() {
 			" WHERE " + tables.user.fields.userId + " = ?", [user.lastConnection, user.userId], 
 			function(err){
 				if(!err) {
-					log("Inserted last connection date: " + user.username, "info", "UserController.js");
+					log("Inserted last connection date: " + user.username, "debug", "UserController.js");
 				}
 				else {
 					log("Failed insertion of last connection date: " + user.username, "err", "UserController.js");

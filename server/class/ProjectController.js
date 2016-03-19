@@ -142,8 +142,46 @@ module.exports = function() {
             }
         );
 	};
+    
+    this.getParentRecursively = function(parentId, fullPath, callback) {
+        if(parentId == 0)
+            callback([]);
+        database.getSingle("SELECT Name as name, ParentFolderID as parentId FROM file WHERE ParentFolderID = ?", [parentId], function(err, row){
+            if(row.parentId == 0)
+                callback(fullPath);
+            controller.projectController.getParentRecursively(row.parentId, fullPath.push(row.name), callback);
+        });
+    };
 	
-    this.createFile = function() {};
+    this.getFilePathFromParentId = function(parentId, callback) {
+        if(parentId == 0)
+            callback("");
+        this.getParentRecursively(parentId, [], callback);
+    };
+    
+    this.createFile = function(client, projectId, parentId, name, isFolder) {
+        var currentDate = new Date().getTime();
+        var user = controller.userController.getUser(client);
+        
+        // TODO: Check rights
+        
+        database.execPrep(
+            " INSERT INTO file (Name, IsFolder, CreationDate, LastEditionDate, ParentFolderID, ProjectID, CreationUserID)" + 
+            " VALUES (?,?,?,?,?,?,?)", [name, isFolder, currentDate, currentDate, parentId, projectId, user.userId], 
+            function(err, row){
+                if(err) {
+                    log("Cannot insert the file", "err", "ProjectController.js");
+                    console.log(err);
+                }
+                else {
+                    log("File created", "debug", "ProjectController.js");
+                    // TODO: sendMessage
+                }
+            }
+        );
+
+       // database.execPrep("INSERT
+    };
     
     this.removeFile = function() {};
     

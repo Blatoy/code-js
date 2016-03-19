@@ -1,5 +1,6 @@
 var projectManager = function() {
     // Create context menu
+    this.currentPath = [];
     var createContextMenu = new ContextMenu();
     var manageContextMenu = new ContextMenu();
     var createProjectUserList = [];
@@ -33,8 +34,35 @@ var projectManager = function() {
                 createContextMenu.display(mouse.x, mouse.y);
             }, 1);
         });
+        
+        this.updatePath();
 	};
 	
+    this.updatePath = function() {
+        $("#path").html("");
+        if(this.currentPath.length == 0) {
+            $("#path").html("/");
+        }
+        else {
+            for(var i = 0; i < this.currentPath.length; i++) {
+                var style = "path-folder";
+
+                if(i == 0)
+                    style = "path-project";
+                
+                var element = $("<div>");
+                element.addClass(style);
+                // TODO: Add onClick go back to path
+                if(i == this.currentPath.length - 1)
+                    element.html(this.currentPath[i]);
+                else
+                    element.html(this.currentPath[i] + " /");
+                    
+                $("#path").append(element);
+            }
+        }
+        
+    }
     
 	this.addProject = function() {
 		var dialogBox = new DialogBox();
@@ -87,6 +115,43 @@ var projectManager = function() {
         createProjectUserList[$(e).data("userId")].permissionLevel = e.options[e.selectedIndex].value;     
     }
     
+    this.addProjectToList = function(isFolder, projectName, permissionLevel) {
+        var imageType = isFolder ? "folder" : "file";
+        var element = $("<div>");
+        var permissionName = "Unknown";
+        
+        
+        switch(permissionLevel) {
+            case 0:
+                permissionName = "Ready only";
+                break;
+            case 1:
+                permissionName = "Write";
+                break;
+            case 2:
+                permissionName = "Administrator";
+                break;
+            case 4:
+                permissionName = "Creator";
+                break;
+        }
+
+        element.addClass("file");
+        element.html(
+            '<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + imageType + '-image"/></span>' + 
+            '<span class="file-title">' + projectName + '</span>' + 
+            '<span class="file-last-modification">Never</span>' + 
+            '<span class="file-working-people">' + permissionName + '</span>'
+        );
+        
+        element.on("contextmenu", function(e) {
+            e.preventDefault();
+            manageContextMenu.display(mouse.x, mouse.y);
+        });
+        
+        $("#file-content").append(element);
+    }
+    
 	this.displayProjects = function(data) {
 		if(data.length == 0) {
 			$("#file-content").text("There's nothing here.");
@@ -94,23 +159,7 @@ var projectManager = function() {
 		else {
 			$("#file-content").html("");
 			for(var i = 0; i < data.length; i++) {
-				var imageType = data[i].isFolder ? "folder" : "file";
-                
-                var element = $("<div>");
-                element.addClass("file");
-                element.html(
-					'<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + imageType + '-image"/></span>' + 
-					'<span class="file-title">' + data[i].projectName + '</span>' + 
-					'<span class="file-last-modification">Jamais</span>' + 
-					'<span class="file-working-people">' + Math.round(Math.random() * 20) + '</span>'
-                );
-                
-                element.on("contextmenu", function(e) {
-                    e.preventDefault();
-                    manageContextMenu.display(mouse.x, mouse.y);
-                });
-                
-                $("#file-content").append(element);
+				this.addProjectToList(data[i].isFolder, data[i].projectName, data[i].permissionLevel);
 			}
 			$("#file-history").html("");
 		}
@@ -158,10 +207,31 @@ var projectManager = function() {
 			case "project-list":
 				this.displayProjects(message.data);
 				break;
+            case "file-list":
+                // Save files
+                break;
 			case "all-users":
                 createProjectUserList = message.data;
                 this.refreshCreateProjectUserList();
 				break;
+            case "add-project-status":
+                if(message.data.success) {
+                    $(".shadow-box").remove(); 
+                    $(".dialog-box").remove(); 
+                    this.addProjectToList(1, message.data.projectName, 4);
+                }
+                else {
+                    switch(message.data.code) {
+                        case 0:
+                            $("#projectName").prop("placeholder", "Already taken!");
+                            $("#projectName").val("");
+                            break;
+                        case 1:
+                            $(".dialog-box-title").html("Something went wrong, please retry");
+                            break;
+                    }
+                }
+                break;
 		}
 	};
 }

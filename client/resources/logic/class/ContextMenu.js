@@ -12,7 +12,7 @@ var ContextMenu = function() {
     this.display = function(x, y) {
         // Check if there's no other context menu
         if(contextMenuLocked) {
-			$(".context-menu").remove();
+			return;
 		}
             
         // Prevent to create multiple context menu
