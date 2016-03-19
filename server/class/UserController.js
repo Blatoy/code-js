@@ -118,18 +118,22 @@ module.exports = function() {
 	
 	this.getAllUsers = function(client) {
 		database.getArray(
-            " SELECT " + tables.user.fields.username + " as 'username', " + tables.user.fields.avatarURL + " as 'avatarURL' FROM " + tables.user.name, [],
+            " SELECT " + tables.user.fields.username + " as 'username', " +
+             tables.user.fields.avatarURL + " as 'avatarURL', " + 
+             tables.user.fields.userId + " as 'userId' " + 
+            " FROM " + tables.user.name, [],
             function(err, row) {
-				if (err) {
-					log("Failed to get all users!", "err", "UserController.js");
-				}
+				if (err)
+					log("Failed to get all users.", "err", "UserController.js");
+
                 if (row) {
 					var data = [];
 					var msg = new modules.classes.Message();
+                    
 					for (var i = 0; i < row.length; i++) {
-						data.push({username: row[i].username, avatarURL: row[i].avatarURL});
+						data.push({username: row[i].username, avatarURL: row[i].avatarURL, userId:row[i].userId});
 					}
-					log("Success at getting all users!", "debug", "UserController.js");
+					log("Success at getting all users.", "debug", "UserController.js");
 					
 					if (client != null) {
 						msg.fromVal("project:all-users", data);

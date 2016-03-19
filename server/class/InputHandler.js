@@ -37,6 +37,12 @@ module.exports = function(client, clientId) {
                 process.exit();
             }
         },
+        e: {
+            help: "Stop the server",
+            action: function(){
+                process.exit();
+            }
+        },
         about: {
             help: "Give informations",
             action: function(){
