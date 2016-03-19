@@ -46,8 +46,9 @@ var Login = function(){
 		modules.socket.sendMessage(msg);
 	}
 	
-    this.handleLoginAttempt = function(success) {
-        if(success) {
+    this.handleLoginAttempt = function(data) {
+        if(data.success) {
+            selfUser = data;
             changePage("project-manager", function(){
 				modules.projectManager = new projectManager();
 				modules.projectManager.init();
@@ -123,10 +124,10 @@ var Login = function(){
     this.handleMessage = function(message) {
         switch(message.type) {
             case "login-attempt":
-                modules.login.handleLoginAttempt(message.data.success);
+                modules.login.handleLoginAttempt(message.data);
                 break;
             case "inscription-status":
-                modules.login.handleInscriptionAttempt(message.data.success);
+                modules.login.handleInscriptionAttempt(message.data);
                 break;
             case "enable-signin":
                 this.displaySignIn();

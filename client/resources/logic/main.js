@@ -4,6 +4,7 @@
 // rip
 "use strict";
 
+var selfUser = {};
 var modules = {};
 var currentPage;
 var isServerReady = false;

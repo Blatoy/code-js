@@ -60,6 +60,8 @@ a:visited {
 textarea {
 	border: 1px solid #eee;
 	border-radius: 2px;
+    font-family: Verdana, Helvetica, sans-serif;
+    font-size: 0.9em;
 }
 
 input[type="email"], input[type="text"], input[type="password"]  {

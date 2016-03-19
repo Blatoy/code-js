@@ -45,27 +45,47 @@ var projectManager = function() {
 		dialogBox.display(
 			"<div id='create-project-informations'>" +
                 "Project informations<hr>" +
-				"<input class='smallSize' type='text'/ placeholder='Project name'>" + 
-				"<br><br><textarea style='height:170px;width:100%;' placeholder='Project description'></textarea>" + 
+				"<input id='projectName' class='smallSize' type='text'/ placeholder='Project name'>" + 
+				"<br><br><textarea id='projectDescription' style='height:170px;width:100%;' placeholder='Project description'></textarea>" + 
 			"</div>" + 
 			"<div id='create-project-users'>" + 
                 "Add members<hr>" + 
 				"<input onkeyup='modules.projectManager.refreshCreateProjectUserList()' id='createProjectSearch' style='margin-bottom: 10px; width:96%;' type='text'/ placeholder='Search a user...'>" + 
 				"<div id='userList'></div>" + 
-			"</div><input type='button' value='Create the project'>"
+			"</div><input type='button' onclick='modules.projectManager.createProject()' value='Create the project'>"
 		, "Create a project");
 	};
 	
 	this.selectUser = function(e) {
-        // TODO: Store rights as well
-        createProjectUserList[$(e.target).data("userId")].isSelected = !createProjectUserList[$(e.target).data("userId")].isSelected;
+        if(e.target.className == 'user' || e.target.className == 'user user-selected' || e.target.className == 'username') {
+            createProjectUserList[$(e.target).data("userId")].isSelected = !createProjectUserList[$(e.target).data("userId")].isSelected;
             
-        if(e.target.className == 'username')
-            e.target = e.target.parentNode;
-        
-        if(e.target.className == 'user' || e.target.className == 'user user-selected')
+            if(e.target.className == 'username')
+                e.target = e.target.parentNode;
+                
             $(e.target).toggleClass("user-selected");
+        }
     };
+    
+    this.createProject = function() {
+        var users = [];
+        var msg = new Message();
+        
+        for(var i = 0; i < createProjectUserList.length; i++) {
+            if(createProjectUserList[i].isSelected) {
+                users.push({userId:createProjectUserList[i].userId, permissionLevel: (createProjectUserList[i].permissionLevel || 0)});
+            }
+        }
+        
+        msg.fromVal("project:add-project", {projectUsers: users, projectName: $("#projectName").val(), description: $("#projectDescription").val()});
+        modules.socket.sendMessage(msg);
+        //  message.data.projectName, message.data.projectUsers, message.data.description
+       // console.log(createProjectUserList);
+    }
+    
+    this.selectUserRights = function(e) {
+        createProjectUserList[$(e).data("userId")].permissionLevel = e.options[e.selectedIndex].value;     
+    }
     
 	this.displayProjects = function(data) {
 		if(data.length == 0) {
@@ -106,6 +126,9 @@ var projectManager = function() {
                     continue;
             }
             
+            if(createProjectUserList[i].userId == selfUser.userId)
+                continue;
+            
             var element = $("<div>");
             element.addClass("user");
             
@@ -116,10 +139,10 @@ var projectManager = function() {
             element.data("userId", i);
             element.append(
                     "<span data-user-id='" + i + "' class='username'>" + createProjectUserList[i].username + "</span>" +
-                    "<select>" + 
-                        "<option>Read only</option>" + 
-                        "<option>Write rights</option>" + 
-                        "<option>Admin rights</option>" + 
+                    "<select data-user-id='" + i + "' onchange='modules.projectManager.selectUserRights(this)'>" + 
+                        "<option value='0' " + (createProjectUserList[i].permissionLevel == 0 ? 'selected' : '') + ">Read only</option>" + 
+                        "<option value='1' " + (createProjectUserList[i].permissionLevel == 1 ? 'selected' : '') + ">Write</option>" + 
+                        "<option value='2' " + (createProjectUserList[i].permissionLevel == 2 ? 'selected' : '') + ">Administrator</option>" + 
                     "</select>"
             );
                 
