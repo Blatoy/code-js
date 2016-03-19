@@ -45,7 +45,7 @@ var ContextMenu = function() {
             var element = $("<div>");
             element.addClass("context-menu-item");
             // Onclick, call the function
-            element.on("click", this.items[i].onClick);
+            element.on("mousedown", this.items[i].onClick);
             // Set the html
             element.html(this.items[i].html);
             // Add the element to the context menu
@@ -58,7 +58,13 @@ var ContextMenu = function() {
 }
 
 // On document click, hide all the context menu
-$(document).on("click mousedown", function(e) {
+/*$(document).click(function(e) {
+    $(".context-menu").remove(); 
+    contextMenuLocked = false;
+});*/
+
+// Chrome fix
+$(document).on("mousedown", function(e) {
     $(".context-menu").remove(); 
     contextMenuLocked = false;
 });
