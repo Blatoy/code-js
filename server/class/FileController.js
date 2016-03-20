@@ -80,7 +80,7 @@ module.exports = function() {
 								socket.sendMessage(user.client, msg);
 							}
 							else {
-								log("File '" + name + "' created", "debug", "FileController.js");
+								log("File '" + name + "' created on database.", "debug", "FileController.js");
                                 var id = this.lastID;
 								// Create file on drive
 								controller.fileController.createFileOnDrive(projectId, parentId, name, isFolder, function() {
@@ -154,14 +154,18 @@ module.exports = function() {
         database.getSingle(
             "SELECT " + tables.project.fields.creationUserId + " as creatorId FROM " + tables.project.name + " WHERE " + tables.project.fields.id + " = ?", [projectId], 
             function(err, row){
-                controller.fileController.getFilePathFromParentId(parentFolder, function(path) {
-                    console.log(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName);
-                    if(isFolder)
-                        controller.fileController.fs.mkdir(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, function(err, row){});
-                    else
-                        controller.fileController.fs.writeFile(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, "", function(err, row){});
-                    callback();
-                });
+                if(!err) {
+                    controller.fileController.getFilePathFromParentId(parentFolder, function(path) {
+                        if(isFolder)
+                            controller.fileController.fs.mkdir(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, function(err, row){});
+                        else
+                            controller.fileController.fs.writeFile(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, "", function(err, row){});
+                        callback();
+                    });
+                }
+                else {
+                    log("Cannot get user ID", "err", "FileController.js");
+                }
             }
         );
 	};    
