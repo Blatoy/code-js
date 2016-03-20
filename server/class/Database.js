@@ -43,6 +43,10 @@ module.exports = function() {
         });
     }
     
+    this.db = function() {
+        return db;
+    };
+    
     /********* SAMPLES **********/
     
     // http://goo.gl/8U5sos

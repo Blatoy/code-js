@@ -9,6 +9,7 @@ module.exports = function(userController, fileController, projectController) {
     userController.init();
     
 	this.fileController = fileController;
+    this.fileController.init();
 	this.projectController = projectController;
     projectController.init();
 	

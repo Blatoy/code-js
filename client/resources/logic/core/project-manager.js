@@ -253,7 +253,7 @@ var projectManager = function() {
     
 	this.displayContent = function() {
 		if(this.projects.length == 0) {
-			$("#file-content").text("There's nothing here.");
+			// $("#file-content").text("There's nothing here.");
 		}
 		else {
 			$("#file-content").html("");
@@ -356,7 +356,9 @@ var projectManager = function() {
 				if(message.data.success) {
                     $(".shadow-box").remove(); 
                     $(".dialog-box").remove(); 
-                    this.addContentToList(1, message.data.fileName, message.data.permissionLevel);
+                  //  {success: true, fileName: name, parentId: parentId, isFolder: isFolder,permissionLevel: row.permissionLevel});
+                    this.files.push(message.data);
+                    this.displayContent();
                 }
                 else {
 					switch(message.data.code) {
@@ -373,8 +375,11 @@ var projectManager = function() {
             case "add-project-status":
                 if(message.data.success) {
                     $(".shadow-box").remove(); 
-                    $(".dialog-box").remove(); 
-                    this.addContentToList(1, message.data.projectName, 4);
+                    $(".dialog-box").remove();
+                    this.projects.push(message.data);
+                    // data = {success: true, projectName: projectName, projectUsers: projectUsers, creationDate: date, creator: user.userId};
+                    // this.addContentToList(1, message.data.projectName, 4, "Never", message.data.projectId);
+                    this.displayContent();
                 }
                 else {
                     switch(message.data.code) {

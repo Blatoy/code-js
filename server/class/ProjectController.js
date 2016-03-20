@@ -77,7 +77,7 @@ module.exports = function() {
                                 });}(projectUsers[i]));
                             }
                             
-                            data = {success: true, projectName: projectName, projectUsers: projectUsers, creationDate: date, creator: user.userId};
+                            data = {success: true, projectName: projectName, projectUsers: projectUsers, creationDate: date, creator: user.userId, projectId: createdProjectId};
                             msg.fromVal("project:add-project-status", data);
                             socket.sendMessage(user.client, msg);
                         });
@@ -142,23 +142,7 @@ module.exports = function() {
             }
         );
 	};
-    
-    this.getParentRecursively = function(parentId, fullPath, callback) {
-        if(parentId == 0)
-            callback([]);
-        database.getSingle("SELECT Name as name, ParentFolderID as parentId FROM file WHERE ParentFolderID = ?", [parentId], function(err, row){
-            if(row.parentId == 0)
-                callback(fullPath);
-            controller.projectController.getParentRecursively(row.parentId, fullPath.push(row.name + "/"), callback);
-        });
-    };
-	
-    this.getFilePathFromParentId = function(parentId, callback) {
-        if(parentId == 0)
-            callback("");
-        this.getParentRecursively(parentId, [], callback);
-    };
-    
+
     this.removeFile = function() {};
     
     this.renameFile = function() {};

@@ -80,19 +80,15 @@ module.exports = function() {
 								socket.sendMessage(user.client, msg);
 							}
 							else {
-								msg.fromVal("project:file-created", {success: true, fileName: name, permissionLevel: row.permissionLevel});
 								log("File '" + name + "' created", "debug", "FileController.js");
-								
+                                var id = this.lastID;
 								// Create file on drive
-								/*controller.fileController.createFileOnDrive(projectId, parentId, name, function(err3, row3) {
-									if (err3)
-										log("Error creating file on drive", "err", "FileController.js");
-									else {
-										log("Successful creating file on drive", "info", "FileController.js");
-										// Send message
-										socket.sendMessage(user.client, msg);										
-									}																	
-								});*/
+								controller.fileController.createFileOnDrive(projectId, parentId, name, isFolder, function() {
+                                    log("Successful creating file on drive", "info", "FileController.js");
+                                    // Send message
+                                    msg.fromVal("project:file-created", {success: true, id: id, deletionDate: null, deletionUserId: null, editionUserId: null, creationDate: currentDate,lastEditionDate: currentDate, projectId: projectId, name: name, parentFolderId: parentId, isFolder: isFolder,permissionLevel: row.permissionLevel});
+                                    socket.sendMessage(user.client, msg);																									
+								});
 							}
 						}
 					);
@@ -107,9 +103,44 @@ module.exports = function() {
        // database.execPrep("INSERT
     };
 	
-	// TODO: GET FILE IN TREE!!!
-	this.createFileOnDrive = function(projectId, parentFolder, fileName, callback) {
-		this.fs.writeFile(modules.config.paths["projects"] + fileName, "", function(err, row){});
-	};
+    this.getParentRecursively = function(parentId, fullPath, callback) {
+        if(parentId == 0) {
+            callback(fullPath);
+            return;
+        }
+
+        database.getSingle("SELECT " + tables.file.fields.name + " as name, " + tables.file.fields.parentFolderId + " as parentId FROM " + tables.file.name + " WHERE " + tables.file.fields.id + " = ?", [parentId], function(err, row){
+            if(!row) {
+                callback(fullPath);
+                return;
+            }
+            
+            fullPath += row.name + "/";
+            controller.fileController.getParentRecursively(row.parentId, fullPath, callback);
+        });
+
+    };
+	
+    this.getFilePathFromParentId = function(parentId, callback) {
+        if(parentId == 0)
+            callback("");
+        this.getParentRecursively(parentId, "", callback);
+    };
     
+    
+	this.createFileOnDrive = function(projectId, parentFolder, fileName, isFolder, callback) {
+        database.getSingle(
+            "SELECT " + tables.project.fields.creationUserId + " as creatorId FROM " + tables.project.name + " WHERE " + tables.project.fields.id + " = ?", [projectId], 
+            function(err, row){
+                controller.fileController.getFilePathFromParentId(parentFolder, function(path) {
+                    console.log(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName);
+                    if(isFolder)
+                        controller.fileController.fs.mkdir(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, function(err, row){});
+                    else
+                        controller.fileController.fs.writeFile(modules.config.paths["projects"] + row.creatorId + "_" + projectId + "/" +  path + fileName, "", function(err, row){});
+                    callback();
+                });
+            }
+        );
+	};    
 };
