@@ -15,7 +15,7 @@ var projectManager = function() {
 		var msg = new Message();
 		msg.fromVal("project:get-projects");
 		modules.socket.sendMessage(msg);
-		
+        
         // Add context menu items
         // createContextMenu.addItem("New file", function(){$("#file-content").append($("#file-content").html())});
 		createContextMenu.addItem("New file", function(){modules.projectManager.addFile();});
@@ -248,6 +248,8 @@ var projectManager = function() {
         });
 
 		element.on("click", function(e){
+            // TODO: Fix too much history, preventing to go back
+            history.pushState(true, "stay in app", "#");
             if(isFolder) {
                 modules.projectManager.currentPath.push({folderId: id, name: name});
                 modules.projectManager.updatePath();
@@ -460,3 +462,10 @@ var projectManager = function() {
 		}
 	};
 }
+
+window.onpopstate = function(e) {
+    if(modules.projectManager.currentPath.length != 0) {
+        modules.projectManager.currentPath.length--;
+        modules.projectManager.updatePath();
+    }
+};
