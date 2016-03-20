@@ -17,12 +17,19 @@ var projectManager = function() {
         // Add context menu items
         // createContextMenu.addItem("New file", function(){$("#file-content").append($("#file-content").html())});
 		createContextMenu.addItem("New file", function(){modules.projectManager.addFile();});
+		createContextMenu.addItem("New folder", function(){modules.projectManager.addFolder();});
         createContextMenu.addItem("New project", function(){modules.projectManager.addProject();});
-        
+      
+
+      
         // TODO: Check on how to get the item ID
         manageContextMenu.addItem("Rename", function(){});
         manageContextMenu.addItem("Move", function(){});
         manageContextMenu.addItem("Delete", function(){});
+		manageContextMenu.addItem("<hr>New file", function(){modules.projectManager.addFile();});
+		manageContextMenu.addItem("New folder", function(){modules.projectManager.addFolder();});
+        manageContextMenu.addItem("New project", function(){modules.projectManager.addProject();});
+        
         
         // Display all context menu
         $("#file-content").on("contextmenu", function(e){
@@ -88,9 +95,22 @@ var projectManager = function() {
 				"<input id='fileName' style='width:100%' type='text'/ placeholder='File name'/>" + 
 				"<br><br>" + 
 			"</div>" + 
-			"<input type='button' onclick='modules.projectManager.createFile()' value='Create file'/>"
+			"<input type='button' onclick='modules.projectManager.createFile(0)' value='Create file'/>"
 		, "Create a file");
 	};
+    
+    this.addFolder = function() {
+		var dialogBox = new DialogBox();
+		var msg = new Message();
+		
+		dialogBox.display(
+			"<div id='create-file-informations'>" +
+				"<input id='fileName' style='width:100%' type='text'/ placeholder='Folder name'/>" + 
+				"<br><br>" + 
+			"</div>" + 
+			"<input type='button' onclick='modules.projectManager.createFile(1)' value='Create folder'/>"
+		, "Create a file");
+    };
     
 	this.addProject = function() {
 		var dialogBox = new DialogBox();
@@ -123,9 +143,14 @@ var projectManager = function() {
         }
     };
 	
-	this.createFile = function() {
+	this.createFile = function(isFolder) {
 		var msg = new Message();
-		msg.fromVal("project:add-file", {projectId: this.currentPath[0].folderId, parentId: this.currentPath[currentPath.length - 1].folderId, name: this.currentPath[currentPath.length - 1].folderId + $("#fileName").val(), isFolder: false});
+		msg.fromVal("project:add-file", {
+            projectId: modules.projectManager.currentPath[0].folderId,
+            parentId: modules.projectManager.currentPath[modules.projectManager.currentPath.length - 1].folderId, 
+            name: $("#fileName").val(), 
+            isFolder: isFolder
+        });
 		modules.socket.sendMessage(msg);
 	};
     
@@ -192,7 +217,9 @@ var projectManager = function() {
                 modules.projectManager.updatePath();
             }
             else {
-                alert("Start editor!");
+                changePage("editor", function(){
+                    alert(id);
+                });
             }
 			// modules.projectManager.displayFiles();
 		});

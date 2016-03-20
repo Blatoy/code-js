@@ -48,7 +48,11 @@ module.exports = function(client, clientId) {
             action: function(){
                 log("CodeJS server version " + modules.config.global.version, "info", "InputHandler.js");
                 log("Made by 4HIN / CIFOM-ET 2015-2016 ", "info", "InputHandler.js");
-                log("Server uptime: " + (new Date().getTime() - global.startTime) + "ms", "info", "InputHandler.js");
+                var time = (new Date().getTime() - global.startTime);
+                var hours = Math.round(time / 1000 / 60 / 60);
+                var minutes = Math.round(time / 1000 / 60);
+                var seconds = Math.round(time / 1000) % 60;
+                log("Server uptime: " + hours + ":" + minutes + ":" + seconds, "info", "InputHandler.js");
             }
         },
         cls: {

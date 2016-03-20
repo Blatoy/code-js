@@ -37,9 +37,6 @@ module.exports = function() {
 								   parentFolderId: row[i].parentFolderId, creationUserId: row[i].creationUserId, editionUserId: row[i].editionUserId,
 								   deletionUserId: row[i].deletionUserId, projectId: row[i].projectId});
 					}
-					// too much useless output
-                    if(data.length != 0)
-                        console.log(data);
                     // log("Success at getting all project's files!", "debug", "FileController.js");
 					
 					if (client != null) {
@@ -55,10 +52,10 @@ module.exports = function() {
 	};
 	
 	this.createFile = function(client, projectId, parentId, name, isFolder) {
-        var currentDate = new Date().getTime();
+        var currentDate = (new Date()).getTime();
         var user = controller.userController.getUser(client);
-		var msg = new Message();
-		
+        var msg = new modules.classes.Message();
+
 		// Get permission level
 		database.getSingle(
             " SELECT " + tables.relUserProject.fields.permissionLevel + " as 'permissionLevel' " +
@@ -87,7 +84,7 @@ module.exports = function() {
 								log("File '" + name + "' created", "debug", "FileController.js");
 								
 								// Create file on drive
-								this.createFileOnDrive(projectId, parentId, name, function(err3, row3) {
+								/*controller.fileController.createFileOnDrive(projectId, parentId, name, function(err3, row3) {
 									if (err3)
 										log("Error creating file on drive", "err", "FileController.js");
 									else {
@@ -95,7 +92,7 @@ module.exports = function() {
 										// Send message
 										socket.sendMessage(user.client, msg);										
 									}																	
-								});
+								});*/
 							}
 						}
 					);
