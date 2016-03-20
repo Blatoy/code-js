@@ -35,6 +35,14 @@ var projectManager = function() {
         $("#file-content").on("contextmenu", function(e){
             e.preventDefault();
             e.stopPropagation();
+            if(modules.projectManager.currentPath.length == 0) {
+                createContextMenu.hideItem(0);
+                createContextMenu.hideItem(1);
+            }
+            else {
+                createContextMenu.showItem(0);
+                createContextMenu.showItem(1);
+            }
             createContextMenu.display(mouse.x, mouse.y);
         });
         
@@ -92,11 +100,14 @@ var projectManager = function() {
 		
 		dialogBox.display(
 			"<div id='create-file-informations'>" +
-				"<input id='fileName' style='width:100%' type='text'/ placeholder='File name'/>" + 
+				"<input id='fileName' style='width:100%' type='text'/ placeholder='File name' />" + 
 				"<br><br>" + 
 			"</div>" + 
 			"<input type='button' onclick='modules.projectManager.createFile(0)' value='Create file'/>"
 		, "Create a file");
+        setTimeout(function(){
+            $("#fileName").focus();
+        }, 1);
 	};
     
     this.addFolder = function() {
@@ -105,11 +116,14 @@ var projectManager = function() {
 		
 		dialogBox.display(
 			"<div id='create-file-informations'>" +
-				"<input id='fileName' style='width:100%' type='text'/ placeholder='Folder name'/>" + 
+				"<input id='fileName' style='width:100%' type='text'/ placeholder='Folder name' />" + 
 				"<br><br>" + 
 			"</div>" + 
 			"<input type='button' onclick='modules.projectManager.createFile(1)' value='Create folder'/>"
 		, "Create a file");
+        setTimeout(function(){
+            $("#fileName").focus();
+        }, 1);
     };
     
 	this.addProject = function() {
@@ -208,6 +222,16 @@ var projectManager = function() {
         
         element.on("contextmenu", function(e) {
             e.preventDefault();
+            if(modules.projectManager.currentPath.length == 0) {
+                manageContextMenu.hideItem(3);
+                manageContextMenu.hideItem(4);
+                manageContextMenu.hideItem(5);
+            }
+            else {
+                manageContextMenu.showItem(3);
+                manageContextMenu.showItem(4);
+                manageContextMenu.showItem(5);
+            }
             manageContextMenu.display(mouse.x, mouse.y);
         });
 

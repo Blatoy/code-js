@@ -8,6 +8,14 @@ var ContextMenu = function() {
         this.items.push({html:html, onClick:onClick});
     }
     
+    this.hideItem = function(index) {
+        this.items[index].hidden = true;
+    }
+    
+    this.showItem = function(index) {
+        this.items[index].hidden = false;
+    }
+    
     // Display the context menu
     this.display = function(x, y) {
         // Check if there's no other context menu
@@ -42,6 +50,8 @@ var ContextMenu = function() {
         
         // Add all items
         for(var i = 0; i < this.items.length; i++) {
+            if(this.items[i].hidden)
+                continue;
             var element = $("<div>");
             element.addClass("context-menu-item");
             // Onclick, call the function
