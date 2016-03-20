@@ -4,14 +4,14 @@ var projectManager = function() {
     var createContextMenu = new ContextMenu();
     var manageContextMenu = new ContextMenu();
     var createProjectUserList = [];
-	var projects = [];
-	var files = [];
+	this.projects = [];
+    this.files = [];
     
 	this.init = function() {
         // Get the project list
         // TODO: Store the projects
 		var msg = new Message();
-		msg.fromVal("project:get-projects", undefined);
+		msg.fromVal("project:get-projects");
 		modules.socket.sendMessage(msg);
 		
         // Add context menu items
@@ -43,27 +43,40 @@ var projectManager = function() {
 	
     this.updatePath = function() {
         $("#path").html("");
-        if(this.currentPath.length == 0) {
-            $("#path").html("/");
-        }
-        else {
-            for(var i = 0; i < this.currentPath.length; i++) {
-                var style = "path-folder";
+        
+        // Add root
+        var element = $("<div>");
+        element.addClass("path-project");
+        element.html("Project list / ");
+        element.on("click", function(){
+            modules.projectManager.currentPath.length = 0;
+            modules.projectManager.updatePath();
+        });
 
-                if(i == 0)
-                    style = "path-project";
+        $("#path").append(element);
                 
-                var element = $("<div>");
-                element.addClass(style);
-                // TODO: Add onClick go back to path
-                if(i == this.currentPath.length - 1)
-                    element.html(this.currentPath[i]);
-                else
-                    element.html(this.currentPath[i] + " /");
-                    
-                $("#path").append(element);
-            }
+        for(var i = 0; i < this.currentPath.length; i++) {
+            var style = "path-folder";
+
+            if(i == 0)
+                style = "path-project";
+            
+            var element = $("<div>");
+            element.addClass(style);
+            (function(i){
+                element.on("click", function(){
+                    modules.projectManager.currentPath.length = (i + 1);
+                    modules.projectManager.updatePath();
+                });
+            }(i))
+            // TODO: Add onClick go back to path
+            element.html(this.currentPath[i].name + " /");
+                
+            $("#path").append(element);
         }
+        
+        // Update the file list
+        modules.projectManager.displayContent();
     };
 	
 	this.addFile = function() {
@@ -112,7 +125,7 @@ var projectManager = function() {
 	
 	this.createFile = function() {
 		var msg = new Message();
-		msg.fromVal("project:add-file", {projectId: currentPath[0].folderId, parentId: currentPath[currentPath.length - 1].folderId, name: currentPath[currentPath.length - 1].folderId + $("#fileName").val(), isFolder: false});
+		msg.fromVal("project:add-file", {projectId: this.currentPath[0].folderId, parentId: this.currentPath[currentPath.length - 1].folderId, name: this.currentPath[currentPath.length - 1].folderId + $("#fileName").val(), isFolder: false});
 		modules.socket.sendMessage(msg);
 	};
     
@@ -128,25 +141,23 @@ var projectManager = function() {
         
         msg.fromVal("project:add-project", {projectUsers: users, projectName: $("#projectName").val(), description: $("#projectDescription").val()});
         modules.socket.sendMessage(msg);
-        //  message.data.projectName, message.data.projectUsers, message.data.description
-       // console.log(createProjectUserList);
     };
     
     this.selectUserRights = function(e) {
         createProjectUserList[$(e).data("userId")].permissionLevel = e.options[e.selectedIndex].value;     
     };
     
-    this.addContentToList = function(isFolder, name, permissionLevel, lastEditionDate) {
+    this.addContentToList = function(isFolder, name, permissionLevel, lastEditionDate, id) {
         var imageType = isFolder ? "folder" : "file";
+
         var element = $("<div>");
         var permissionName = "Unknown";
 		if (!lastEditionDate)
 			lastEditionDate = "Never";
                 
         switch(permissionLevel) {
-			default:
             case 0:
-                permissionName = "Ready only";
+                permissionName = "Read only";
                 break;
             case 1:
                 permissionName = "Write";
@@ -157,11 +168,14 @@ var projectManager = function() {
             case 4:
                 permissionName = "Creator";
                 break;
+            default:
+                permissionName = "-";
+                break;
         }
 
         element.addClass("file");
         element.html(
-            '<span class="file-icon"><img src="resources/ui/images/folder.png" alt="' + imageType + '-image"/></span>' + 
+            '<span class="file-icon"><img src="resources/ui/images/' + imageType + '.png" alt="' + imageType + '-image"/></span>' + 
             '<span class="file-title"' + onclick + '>' + name + '</span>' + 
             '<span class="file-last-modification">' + lastEditionDate + '</span>' + 
             '<span class="file-working-people">' + permissionName + '</span>'
@@ -171,40 +185,63 @@ var projectManager = function() {
             e.preventDefault();
             manageContextMenu.display(mouse.x, mouse.y);
         });
-		
-		element.on("click", function(){
-			modules.projectManager.displayFiles();
+
+		element.on("click", function(e){
+            if(isFolder) {
+                modules.projectManager.currentPath.push({folderId: id, name: name});
+                modules.projectManager.updatePath();
+            }
+            else {
+                alert("Start editor!");
+            }
+			// modules.projectManager.displayFiles();
 		});
         
         $("#file-content").append(element);
     }
     
-	this.displayContent = function(data) {
-		if(data.length == 0) {
+	this.displayContent = function() {
+		if(this.projects.length == 0) {
 			$("#file-content").text("There's nothing here.");
 		}
 		else {
 			$("#file-content").html("");
-			for(var i = 0; i < data.length; i++) {
-				this.addContentToList(data[i].isFolder, data[i].projectName, data[i].permissionLevel);
-			}
+            // Display projects
+            // TODO: Fix search to search on child too
+            if(this.currentPath.length == 0) {
+                for(var i = 0; i < this.projects.length; i++) {
+                    if($("#search").val().length == 0 || this.projects[i].projectName.toLowerCase().indexOf($("#search").val().toLowerCase()) != -1)
+                        this.addContentToList(1, this.projects[i].projectName, this.projects[i].permissionLevel, "Never", this.projects[i].projectId);
+                }
+            }
+            else {
+                // Display files
+                for(var i = 0; i < this.files.length; i++) {
+                    if(this.files[i].projectId == this.currentPath[0].folderId) {
+                        if(this.files[i].parentFolderId == this.currentPath[this.currentPath.length - 1].folderId || (this.currentPath.length == 1 && this.files[i].parentFolderId == 0))
+                            if($("#search").val().length == 0 || this.files[i].name.toLowerCase().indexOf($("#search").val().toLowerCase()) != -1)
+                                this.addContentToList(this.files[i].isFolder, this.files[i].name, -1, "Never", this.files[i].id);
+                    }
+                }
+            }
 			$("#file-history").html("");
 		}
 	};
 	
-	this.displayFiles = function() {
-		console.log(projects.length);
-		console.log(files.length);
+	/*this.displayFiles = function() {
+		console.log(this.projects.length);
+		console.log(this.files.length);
 		// Display only files that are in the current folder
 		for (var i = 0; i < files.length; i++) {
 			// CURRENT PATH DOESN'T WORK!!!
 			/*if (files[i].projectId == currentPath[0].folderId) {
 				// Make recursively ...
 				this.addContentToList(files[i].isFolder, files[i].name, -1, files[i].lastEditionDate);
-			}*/
+			}
 		}
-	};
+	};*/
   
+    // Refresh the userlist on add project dialog
 	this.refreshCreateProjectUserList = function() {
         $("#userList").html("");
 
@@ -245,19 +282,20 @@ var projectManager = function() {
 	this.handleMessage = function(message) {
 		switch(message.type) {
 			case "project-list":
-				projects = message.data;
-				this.displayContent(projects, 0);
+				this.projects = message.data;
+				this.displayContent();
 		
 				// Get files for each project
-				for (var i = 0; i < projects.length; i++) {
+                // TODO: One query to get all files
+				for (var i = 0; i < this.projects.length; i++) {
 					var msg = new Message();
-					msg.fromVal("project:get-files", {projectId: projects[i].projectId});
+					msg.fromVal("project:get-files", {projectId: this.projects[i].projectId});
 					modules.socket.sendMessage(msg);
 				}
 				break;
             case "file-list":
 				for (var i = 0; i < message.data.length; i++)
-					files.push(message.data[i]);
+					this.files.push(message.data[i]);
                 break;
 			case "all-users":
                 createProjectUserList = message.data;

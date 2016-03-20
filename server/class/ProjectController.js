@@ -149,7 +149,7 @@ module.exports = function() {
         database.getSingle("SELECT Name as name, ParentFolderID as parentId FROM file WHERE ParentFolderID = ?", [parentId], function(err, row){
             if(row.parentId == 0)
                 callback(fullPath);
-            controller.projectController.getParentRecursively(row.parentId, fullPath.push(row.name), callback);
+            controller.projectController.getParentRecursively(row.parentId, fullPath.push(row.name + "/"), callback);
         });
     };
 	
