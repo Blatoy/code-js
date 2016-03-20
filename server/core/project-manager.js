@@ -24,19 +24,25 @@ module.exports = function() {
 				controller.projectController.addProject(controller.userController.getUser(client), message.data.projectName, message.data.projectUsers, message.data.description);
                 // check if user can add
                 break;
+			case "rename":
+				if (message.data.isProject)
+					controller.projectController.rename(client, message.data.name, message.data.elementId);
+				else
+					controller.fileController.rename(client, message.data.name, message.data.elementId);
+				break;
             case "rename-project":
                 // projectId, name
                 // check if user is project admin, + does not already exist
+                break;
+            case "remove-file":
+                // fileId
+                 // Check if user has access!
                 break;
             case "add-file":
                // console.log(controller.fileController.createFile());
                 controller.fileController.createFile(client, message.data.projectId, message.data.parentId, message.data.name, message.data.isFolder);
                 // fileName, projectId, parentId, isFolder
                 // Check if user has access!
-                break;
-            case "remove-file":
-                // fileId
-                 // Check if user has access!
                 break;
             case "rename-file":
                 // fileId, name

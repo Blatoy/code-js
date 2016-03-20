@@ -6,6 +6,8 @@ var projectManager = function() {
     var createProjectUserList = [];
 	this.projects = [];
     this.files = [];
+	// Michael: Doing some tests
+	var clickedItem;
     
 	this.init = function() {
         // Get the project list
@@ -23,7 +25,7 @@ var projectManager = function() {
 
       
         // TODO: Check on how to get the item ID
-        manageContextMenu.addItem("Rename", function(){});
+        manageContextMenu.addItem("Rename", function(){modules.projectManager.openRenameDialog();});
         manageContextMenu.addItem("Move", function(){});
         manageContextMenu.addItem("Delete", function(){});
 		manageContextMenu.addItem("<hr>New file", function(){modules.projectManager.addFile();});
@@ -221,6 +223,14 @@ var projectManager = function() {
         );
         
         element.on("contextmenu", function(e) {
+			// Needed values for renaming
+			clickedItem = e.target;
+			$(clickedItem).data("id", id);
+			if (modules.projectManager.currentPath.length == 0)
+				$(clickedItem).data("isProject", true);
+			else
+				$(clickedItem).data("isProject", false);
+			
             e.preventDefault();
             if(modules.projectManager.currentPath.length == 0) {
                 manageContextMenu.hideItem(3);
@@ -278,19 +288,6 @@ var projectManager = function() {
 			$("#file-history").html("");
 		}
 	};
-	
-	/*this.displayFiles = function() {
-		console.log(this.projects.length);
-		console.log(this.files.length);
-		// Display only files that are in the current folder
-		for (var i = 0; i < files.length; i++) {
-			// CURRENT PATH DOESN'T WORK!!!
-			/*if (files[i].projectId == currentPath[0].folderId) {
-				// Make recursively ...
-				this.addContentToList(files[i].isFolder, files[i].name, -1, files[i].lastEditionDate);
-			}
-		}
-	};*/
   
     // Refresh the userlist on add project dialog
 	this.refreshCreateProjectUserList = function() {
@@ -329,6 +326,43 @@ var projectManager = function() {
         if($("#userList").text() == "")
            $("#userList").append("No results founds"); 
     };
+	
+	this.openRenameDialog = function() {
+		var dialogBox = new DialogBox();
+		var previousName = "";
+		
+		// Find previous name
+		if ($(clickedItem).data("isProject")) {
+			for (var i = 0; i < this.projects.length; i++) {
+				if (this.projects[i].projectId == $(clickedItem).data("id"))
+					previousName = this.projects[i].projectName;
+			}
+		}
+		else {
+			for (var i = 0; i < this.files.length; i++) {
+				if (this.files[i].id == $(clickedItem).data("id"))
+					previousName = this.files[i].name;
+			}
+		}
+		
+		dialogBox.display(
+			"<div id='rename'>" +
+				"<input id='objName' style='width:100%' type='text'/ placeholder='Name' value='" + previousName + "' />" + 
+				"<br><br>" + 
+			"</div>" + 
+			"<input type='button' onclick='modules.projectManager.rename()' value='Rename'/>"
+		, "Rename");
+        setTimeout(function(){
+            $("#objName").select();
+        }, 1);
+	};
+	
+	this.rename = function() {
+		// Currently doesn't handle projects
+		var msg = new Message();
+		msg.fromVal("project:rename", {name: $("#objName").val(), elementId: $(clickedItem).data("id"), isProject: $(clickedItem).data("isProject")});
+		modules.socket.sendMessage(msg);
+	};
     
 	this.handleMessage = function(message) {
 		switch(message.type) {
@@ -370,6 +404,34 @@ var projectManager = function() {
                             $(".dialog-box-title").html("Something went wrong, please retry");
                             break;
                     }
+				}
+				break;
+			case "renamed":
+				if (message.data.success) {
+					// Hide dialog
+					$(".shadow-box").remove(); 
+                    $(".dialog-box").remove();
+					
+					// Update arrays
+					if (message.data.isProject) {
+						for (var i = 0; i < this.projects.length; i++) {
+							if (this.projects[i].projectId == message.data.id)
+								this.projects[i].projectName = message.data.newName;
+						}
+					}
+					else {
+						for (var i = 0; i < this.files.length; i++) {
+							if (this.files[i].id == message.data.id)
+								this.files[i].name = message.data.newName;
+						}
+					}
+					
+					// Update display list
+					this.displayContent();
+				}
+				else {
+					$("#objName").prop("placeholder", "Error occured!");
+					$("#objName").val("");
 				}
 				break;
             case "add-project-status":

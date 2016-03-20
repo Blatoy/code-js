@@ -127,6 +127,28 @@ module.exports = function() {
         this.getParentRecursively(parentId, "", callback);
     };
     
+	this.rename = function(client, name, fileId) {
+		database.execPrep(
+			" UPDATE " + tables.file.name + 
+			" SET " + tables.file.fields.name + " = ?" +
+			" WHERE " + tables.file.fields.id + " = ?;", [name, fileId], 
+			function(err, row) {
+				if (err) {
+					log("Error at renaming file [id:" + fileId + "]", "err", "FileController.js");
+					console.log(err);
+					var msg = new modules.classes.Message();
+					msg.fromVal("project:renamed", {success: false});
+					socket.sendMessage(client, msg);
+				}
+				else {
+					log("Successfully renamed file [id:" + fileId + "] into '" + name + "'", "info", "FileController.js");
+					var msg = new modules.classes.Message();
+					msg.fromVal("project:renamed", {success: true, id: fileId, newName: name, isProject: false});
+					socket.sendMessage(client, msg);
+				}
+			}
+		);
+	};
     
 	this.createFileOnDrive = function(projectId, parentFolder, fileName, isFolder, callback) {
         database.getSingle(

@@ -145,7 +145,27 @@ module.exports = function() {
 
     this.removeFile = function() {};
     
-    this.renameFile = function() {};
+    this.rename = function(client, name, projectId) {
+		var msg = new modules.classes.Message();
+		database.execPrep(
+			" UPDATE " + tables.project.name + 
+			" SET " + tables.project.fields.name + " = ?" +
+			" WHERE " + tables.project.fields.id + " = ?;", [name, projectId], 
+			function(err, row) {
+				if (err) {
+					log("Error at renaming project [id:" + projectId + "]", "err", "ProjectController.js");
+					console.log(err);
+					msg.fromVal("project:renamed", {success: false});
+					socket.sendMessage(client, msg);
+				}
+				else {
+					log("Successfully renamed project [id:" + projectId + "] into '" + name + "'", "info", "ProjectController.js");
+					msg.fromVal("project:renamed", {success: true, id: projectId, newName: name, isProject: true});
+					socket.sendMessage(client, msg);
+				}
+			}
+		);
+	};
     
     this.createProject = function(){};
     
