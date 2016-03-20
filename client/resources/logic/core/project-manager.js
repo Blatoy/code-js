@@ -160,10 +160,12 @@ var projectManager = function() {
     };
 	
 	this.createFile = function(isFolder) {
+		var parentID = modules.projectManager.currentPath == 1 ? -1 : modules.projectManager.currentPath[modules.projectManager.currentPath.length -1].folderId;
+	
 		var msg = new Message();
 		msg.fromVal("project:add-file", {
             projectId: modules.projectManager.currentPath[0].folderId,
-            parentId: modules.projectManager.currentPath[modules.projectManager.currentPath.length - 1].folderId, 
+            parentId: parentID, 
             name: $("#fileName").val(), 
             isFolder: isFolder
         });
