@@ -55,6 +55,7 @@ module.exports = function() {
         var currentDate = (new Date()).getTime();
         var user = controller.userController.getUser(client);
         var msg = new modules.classes.Message();
+        nameSafe = name.replace(/[^A-Za-z0-9\.]/gi, '_');
 
 		// Get permission level
 		database.getSingle(
@@ -70,23 +71,23 @@ module.exports = function() {
                    // Add file
 					database.execPrep(
 						" INSERT INTO file (Name, IsFolder, CreationDate, LastEditionDate, ParentFolderID, ProjectID, CreationUserID)" + 
-						" VALUES (?,?,?,?,?,?,?)", [name, isFolder, currentDate, currentDate, parentId, projectId, user.userId], 
+						" VALUES (?,?,?,?,?,?,?)", [nameSafe, isFolder, currentDate, currentDate, parentId, projectId, user.userId], 
 						function(err2, row2){
 							if(err2) {
 								// TODO: Check kind of error -> code number
 								msg.fromVal("project:file-created", {success: false, code: 1});
-								log("Cannot insert file '" + name + "'", "err", "FileController.js");
+								log("Cannot insert file '" + nameSafe + "'", "err", "FileController.js");
 								console.log(err2);
 								socket.sendMessage(user.client, msg);
 							}
 							else {
-								log("File '" + name + "' created on database.", "debug", "FileController.js");
+								log("File '" + nameSafe + "' created on database.", "debug", "FileController.js");
                                 var id = this.lastID;
 								// Create file on drive
-								controller.fileController.createFileOnDrive(projectId, parentId, name, isFolder, function() {
+								controller.fileController.createFileOnDrive(projectId, parentId, nameSafe, isFolder, function() {
                                     log("Successful creating file on drive", "info", "FileController.js");
                                     // Send message
-                                    msg.fromVal("project:file-created", {success: true, id: id, deletionDate: null, deletionUserId: null, editionUserId: null, creationDate: currentDate,lastEditionDate: currentDate, projectId: projectId, name: name, parentFolderId: parentId, isFolder: isFolder,permissionLevel: row.permissionLevel});
+                                    msg.fromVal("project:file-created", {success: true, id: id, deletionDate: null, deletionUserId: null, editionUserId: null, creationDate: currentDate,lastEditionDate: currentDate, projectId: projectId, name: nameSafe, parentFolderId: parentId, isFolder: isFolder,permissionLevel: row.permissionLevel});
                                     socket.sendMessage(user.client, msg);																									
 								});
 							}
@@ -103,7 +104,12 @@ module.exports = function() {
        // database.execPrep("INSERT
     };
 	
-    this.getParentRecursively = function(parentId, fullPath, callback) {
+    this.getParentRecursively = function(parentId, fullPath, maxDepth, callback) {
+        if(maxDepth > 20) {
+            log("Max folder depth reached.", "err", "FileController.js");
+            return;
+        }
+
         if(parentId == 0) {
             callback(fullPath);
             return;
@@ -116,15 +122,16 @@ module.exports = function() {
             }
             
             fullPath += row.name + "/";
-            controller.fileController.getParentRecursively(row.parentId, fullPath, callback);
+            maxDepth++;
+            controller.fileController.getParentRecursively(row.parentId, fullPath, maxDepth, callback);
         });
 
     };
 	
     this.getFilePathFromParentId = function(parentId, callback) {
-        if(parentId == 0)
+        if(parentId < 1)
             callback("");
-        this.getParentRecursively(parentId, "", callback);
+        this.getParentRecursively(parentId, "", 0, callback);
     };
     
 	this.rename = function(client, name, fileId) {
