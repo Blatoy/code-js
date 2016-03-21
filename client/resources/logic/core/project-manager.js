@@ -355,7 +355,7 @@ var projectManager = function() {
                 modules.projectManager.updatePath();
             }
             else {
-                this.startEditor(id);
+                modules.projectManager.startEditor(id);
             }
 			// modules.projectManager.displayFiles();
 		});
