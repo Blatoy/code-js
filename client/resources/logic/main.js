@@ -9,6 +9,7 @@ var modules = {};
 var currentPage;
 var isServerReady = false;
 var openedFiles = [];
+var openedFileIndex = 0;
 // Save the mouse position
 var mouse = {x: 0, y:0};
 // Prevent the display of multiple context menu

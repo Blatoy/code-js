@@ -213,6 +213,9 @@ module.exports = function() {
 				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + value + controller.fileController.files[i].content.substr(pos + value.length, controller.fileController.files[i].content.length);
 				controller.fileController.files[i].isModified = true;
 				
+				console.log(pos);
+				console.log("'" + controller.fileController.files[i].content + "'");
+				
 				// Send message
 				var msg = new modules.classes.Message();
 				msg.fromVal("editor:add-content", {success: true, fileId: fileId, pos: pos, value: value});
@@ -229,7 +232,8 @@ module.exports = function() {
 				// Modifying content
 				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + controller.fileController.files[i].content.substr(pos + length, controller.fileController.files[i].content.length);
 				controller.fileController.files[i].isModified = true;
-				
+								console.log(pos);
+				console.log("'" + controller.fileController.files[i].content + "'");
 				// Send message
 				var msg = new modules.classes.Message();
 				msg.fromVal("editor:remove-content", {success: true, fileId: fileId, pos: pos, length: length});
@@ -243,13 +247,11 @@ module.exports = function() {
 	this.saveFile = function() {
 		for (var i = 0; i < controller.fileController.files.length; i++) {
 			if (controller.fileController.files[i].isModified) {
-				console.log(controller.fileController.files[i]);
 				(function(file){
 					controller.fileController.getFilePathFromFileId(file.id, function(filePath) {
 						controller.fileController.fs.writeFile(filePath, file.content, function (writeErr) {
 							if (writeErr) {
 								log("Failed to write file content", "err", "FileController.js");
-								console.log(writeErr);
 							}
 							else {
 								file.isModified = false;
@@ -263,7 +265,6 @@ module.exports = function() {
 	
 	this.getFilePathFromFileId = function(fileId, callback) {
 		// Get file info
-		console.log(fileId);
 		database.getSingle(
             " SELECT " + tables.file.fields.name + " as 'name', " + tables.file.fields.parentFolderId + " as 'parentId', " +
             tables.file.fields.projectId + " as 'projectId', " + tables.file.fields.creationUserId + " as 'creationUserId'" +

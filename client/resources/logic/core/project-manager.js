@@ -233,19 +233,25 @@ var projectManager = function() {
 	
 	this.startEditor = function(id) {
 		openedFiles.push(id);
+		openedFileIndex = openedFiles.length - 1;
+
 		changePage("editor", function(){
 			modules.editor.initCodeMirror();
 			modules.editor.loadFile(id);
 		});
 	};
 	
-	this.updateTree = function() {
+	this.updateTree = function(fromEditor) {
 		$("#file-structure").html("");
 		for(var i = 0; i < this.projects.length; i++) {
 			var items = [];
 			var textToAppend = "";
 			
-			textToAppend += "<b onclick='modules.projectManager.setCurrentPath("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+			if(fromEditor)
+				textToAppend += "<b onclick='modules.projectManager.setCurrentPath("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+			else
+				textToAppend += "<b onclick='modules.projectManager.startEditor("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+				
 			items = this.treeRecursive(0, [], this.projects[i].projectId, 1);
 			
 			for(var j = 0; j < items.length; j++)

@@ -2,7 +2,7 @@ var Editor = function(){
 	this.codeMirror;
 	
 	this.init = function(){
-
+		// this.codeMirror =
 	};
 	
 	this.loadFile = function(fileId) {
@@ -15,15 +15,63 @@ var Editor = function(){
 		this.codeMirror = CodeMirror.fromTextArea(document.getElementById('mirror-textarea'), {
 			lineNumbers: true,
 			mode: "text/javascript",
-			theme: "eclipse"
+			theme: "eclipse",
 		});
+		
+		this.codeMirror.on("change", function(mirror, e){modules.editor.handleTextChange(mirror, e)});
+	};
+	
+	this.handleTextChange = function(mirror, e) {
+		var index = 0;
+		for(var i = 0; i < e.from.line; i++) {
+			index += modules.editor.codeMirror.getLine(i).length + 4;
+		}
+		
+		index += e.from.ch;
+	
+		var textRemovedLength = 0;
+		for(var i = 0; i < e.removed.length; i++) {
+			textRemovedLength += e.removed[i].length;
+			/*if(i + 1 < e.removed.length) {
+				textRemovedLength -= 2;
+			}*/
+		}
+
+		var textAdded = "";
+
+		for(var i = 0; i < e.text.length; i++) {
+			textAdded += e.text[i];
+			if(i + 1 < e.text.length) {
+				textAdded += "\r\n";
+			}
+		}
+		
+		
+		if(textRemovedLength > 0) {
+			index -= e.from.line + 1;
+			console.log(textRemovedLength + " - " + index);
+			var remMsg = new Message();
+			remMsg.fromVal("editor:remove-content", {fileId: openedFiles[openedFileIndex], pos: index, length: textRemovedLength});
+			modules.socket.sendMessage(remMsg);
+		}
+		
+		if(textAdded.length > 0) {
+			var addMsg = new Message();
+			addMsg.fromVal("editor:add-content", {fileId: openedFiles[openedFileIndex], pos: index, value: textAdded});
+			modules.socket.sendMessage(addMsg);
+		}
+
+		//console.log(e.from);
+	};
+	
+	this.removeCharacter = function() {
+		
 	};
 	
 	this.handleMessage = function(message) {
 			switch(message.type) {
 				case "file-content":
 					modules.editor.codeMirror.setValue(message.data.content);
-					console.log(modules.editor);
 					break;
 			}
 	};
