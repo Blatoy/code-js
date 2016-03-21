@@ -12,6 +12,8 @@ var Editor = function(){
 	};
 	
 	this.initCodeMirror = function() {
+		console.log(document.getElementById('mirror-textarea'));
+
 		this.codeMirror = CodeMirror.fromTextArea(document.getElementById('mirror-textarea'), {
 			lineNumbers: true,
 			mode: "text/javascript",
@@ -22,7 +24,7 @@ var Editor = function(){
 	};
 	
 	this.loadStyles = function() {
-		loadStyles([CONFIG_PATHS["tools"] + "3codemirror-5.12/lib/codemirror.css", CONFIG_PATHS["tools"] + "codemirror-5.12/theme/3024-day.css"]);
+		loadStyles([CONFIG_PATHS["tools"] + "codemirror-5.12/lib/codemirror.css", CONFIG_PATHS["tools"] + "codemirror-5.12/theme/3024-day.css"]);
 	};
 };
 

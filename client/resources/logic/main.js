@@ -64,10 +64,13 @@ function init() {
 // Probably a good idea to move on a tool.js
 function loadStyles(styles) {
     // Convert to array if needed
-    if(typeof styles != "array")
+    if(typeof styles == "string") {
         styles = [styles];
+	}
+
     // Add the styles
     for(var i = 0; i < styles.length; i++) {
+		console.log(styles[i]);
         $("head").append('<link rel="stylesheet" href="' + styles[i] + '.css" type="text/css" />');
     }
 }
