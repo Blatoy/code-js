@@ -159,6 +159,87 @@ var projectManager = function() {
         }
     };
 	
+	
+	/*
+	<!--<ul class="tree">
+			<li class="tree-project">Loading...</li>
+			<!--<li class="tree-project">Project Helios</li>
+			<ul>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>main.cpp</li>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>scene.cpp</li>
+				<li>
+					<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
+					<ul>
+						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>sun.jpg</li>
+						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>earth.jpg</li>
+						<li>
+							<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
+							<ul>
+								<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
+                                <li>
+                                    <ul>
+                                        <li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
+                                    </ul>
+                                </li>
+                            </ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<li class="tree-project">Project Coord Tracker</li>
+			<ul>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>manifest.xml</li>
+				<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>res</li>
+				<ul>
+					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>MainActivity.java</li>
+				</ul>
+			</ul>-->
+	*/
+	this.treeRecursive = function(parentFolder, res, projectId, depth) {
+		for(var j = 0; j < this.files.length; j++) {
+			if(projectId != this.files[j].projectId)
+				continue;
+			
+			
+			if(parentFolder == this.files[j].parentFolderId) {
+				if(this.files[j].isFolder) {
+					//res += "<ul>";
+					res += ("-").repeat(depth) + "<img style='width:20px;' src='resources/ui/images/folder.png' alt='Folder'/>" + this.files[j].name + "<br>";
+					/*var ul = $("<ul>") ;
+					fileImage.prop("alt", "Folder");
+					fileImage.prop("src", "resources/ui/images/folder.png");
+					file.append(fileImage);
+					file.append(modules.projectManager.files[j].name);
+*/					console.log(projectId);
+					modules.projectManager.treeRecursive(this.files[j].id, res, projectId, ++depth);
+				}
+				else {
+					console.log(depth);
+					res += ("-").repeat(depth) + "<img style='width:20px;' src='resources/ui/images/file.png' alt='File'/>" + this.files[j].name + "<br>";
+					/*fileImage.prop("alt", "File");
+					fileImage.prop("src", "resources/ui/images/file.png");
+					file.append(fileImage);
+					file.append(this.files[j].name);*/
+				//	res += "</ul>";
+				}
+			}
+			
+		}
+
+		return res;
+	};
+	
+	this.updateTree = function() {
+		var textToAppend = "";
+		for(var i = 0; i < this.projects.length; i++) {
+			textToAppend += "<b>" + this.projects[i].projectName + "</b>";
+			textToAppend += this.treeRecursive(this.projects[i].projectId, "", this.projects[i].projectId, 1);
+			textToAppend += "<hr>";
+			$("#file-structure").append(textToAppend);
+		}
+		
+	};
+	
 	this.createFile = function(isFolder) {
 		var parentID = modules.projectManager.currentPath.length == 0 ? -1 : modules.projectManager.currentPath[modules.projectManager.currentPath.length -1].folderId;
 	
