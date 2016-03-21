@@ -61,6 +61,7 @@ var Socket = function() {
                 modules.projectManager.handleMessage(msg);
                 break;
 			case "editor":
+                modules.editor.handleMessage(msg);
 				break;
             case "global":
                 switch(msg.type) {
