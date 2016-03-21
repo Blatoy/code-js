@@ -153,7 +153,7 @@ module.exports = function() {
                     console.log(err);                    
                 }
                 else {
-					log("Successfully got file information", "info", "FileController.js");
+					log("Successfully got file information", "debug", "FileController.js");
 					// Get file path
 					controller.fileController.getFilePathFromParentId(row.parentId, function(path) {
 						// File path
@@ -161,9 +161,27 @@ module.exports = function() {
 						filePath += path;
 						filePath += row.name;
 						
+						// Check if content already exist in inner files array
+						for (var i = 0; i < controller.fileController.files.length; i++) {
+							if (controller.fileController.files[i].id == fileId) {
+								var userFound = false;
+								for (var j = 0; j < controller.fileController.files[i].userlist.length; j++) {
+									if (controller.fileController.files[i].userlist[j] == user.userId)
+										userFound = true;
+								}
+								
+								if (!userFound)
+									controller.fileController.files[i].userlist.push(user);
+								var msg = new modules.classes.Message();
+								msg.fromVal("editor:file-content", {success: true, content: controller.fileController.files[i].content, projectId: row.projectId});
+								socket.sendMessage(user.client, msg);
+								log("Sent content from files array", "debug", "FileController.js");
+								return;
+							}
+						}
+						
 						// Read
-						this.fs = require('fs');
-						this.fs.readFile(modules.config.paths.projects + filePath, "utf8", function(error, data) {
+						controller.fileController.fs.readFile(modules.config.paths.projects + filePath, "utf8", function(error, data) {
 							if (error) {
 								log("Failed to read file content!", "err", "FileController.js");
 								console.log(error);
@@ -174,10 +192,11 @@ module.exports = function() {
 								socket.sendMessage(user.client, msg);
 							}
 							else {
-								log("Successfully read file's content!", "info", "FileController.js");
+								log("Successfully read file's content!", "debug", "FileController.js");
 								
 								// Send message
 								var msg = new modules.classes.Message();
+								controller.fileController.files.push({id: fileId, content: data, isModified: false, userlist: [user]});
 								msg.fromVal("editor:file-content", {success: true, content: data, projectId: row.projectId});
 								socket.sendMessage(user.client, msg);
 							}
@@ -185,6 +204,89 @@ module.exports = function() {
 					});
 				}
 		});		
+	};
+	
+	this.addCharToFile = function(client, fileId, pos, value) {
+		for (var i = 0; i < controller.fileController.files.length; i++) {
+			if (controller.fileController.files[i].id == fileId) {
+				// Modifying content
+				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + value + controller.fileController.files[i].content.substr(pos + value.length, controller.fileController.files[i].content.length);
+				controller.fileController.files[i].isModified = true;
+				
+				// Send message
+				var msg = new modules.classes.Message();
+				msg.fromVal("editor:add-content", {success: true, fileId: fileId, pos: pos, value: value});
+				for (var j = 0; j < controller.fileController.files[i].userlist.length; j++) {
+					socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
+				}
+			}
+		}
+	};
+	
+	this.removeCharFromFile = function(client, fileId, pos, length) {
+		for (var i = 0; i < controller.fileController.files.length; i++) {
+			if (controller.fileController.files[i].id == fileId) {
+				// Modifying content
+				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + controller.fileController.files[i].content.substr(pos + length, controller.fileController.files[i].content.length);
+				controller.fileController.files[i].isModified = true;
+				
+				// Send message
+				var msg = new modules.classes.Message();
+				msg.fromVal("editor:remove-content", {success: true, fileId: fileId, pos: pos, length: length});
+				for (var j = 0; j < controller.fileController.files[i].userlist.length; j++) {
+					socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
+				}
+			}
+		}
+	};
+	
+	this.saveFile = function() {
+		for (var i = 0; i < controller.fileController.files.length; i++) {
+			if (controller.fileController.files[i].isModified) {
+				console.log(controller.fileController.files[i]);
+				(function(file){
+					controller.fileController.getFilePathFromFileId(file.id, function(filePath) {
+						controller.fileController.fs.writeFile(filePath, file.content, function (writeErr) {
+							if (writeErr) {
+								log("Failed to write file content", "err", "FileController.js");
+								console.log(writeErr);
+							}
+							else {
+								file.isModified = false;
+							}
+						});
+					});
+				})(controller.fileController.files[i]);
+			}
+		}
+	};
+	
+	this.getFilePathFromFileId = function(fileId, callback) {
+		// Get file info
+		console.log(fileId);
+		database.getSingle(
+            " SELECT " + tables.file.fields.name + " as 'name', " + tables.file.fields.parentFolderId + " as 'parentId', " +
+            tables.file.fields.projectId + " as 'projectId', " + tables.file.fields.creationUserId + " as 'creationUserId'" +
+			" FROM " + tables.file.name + 
+            " WHERE " + tables.file.fields.id + " = ? ", [fileId],
+            function(err, row) {
+				if (err || !row) {
+					log("Failed to get file information", "err", "FileController.js");
+                    console.log(err);                    
+                }
+                else {
+					log("Successfully got file information", "debug", "FileController.js");
+					// Get file path
+					controller.fileController.getFilePathFromParentId(row.parentId, function(path) {
+						// File path
+						var filePath = modules.config.paths.projects + row.creationUserId + "_" + row.projectId + "/";
+						filePath += path;
+						filePath += row.name;
+						
+						callback(filePath);			
+					});
+				}
+			});
 	};
     
 	this.rename = function(client, name, fileId) {
@@ -206,7 +308,7 @@ module.exports = function() {
 					socket.sendMessage(client, msg);
 				}
 				else {
-					log("Successfully got file information", "info", "FileController.js");
+					log("Successfully got file information", "debug", "FileController.js");
 									
 					// Get file info
 					database.execPrep(
@@ -219,25 +321,24 @@ module.exports = function() {
 								console.log(updateErr);                    
 							}
 							else {
-								log("Successfully renamed file [id:" + fileId + "] into '" + name + "'", "info", "FileController.js");
+								log("Successfully renamed file [id:" + fileId + "] into '" + name + "'", "debug", "FileController.js");
 								
 								// Get file path
 								controller.fileController.getFilePathFromParentId(selectRow.parentId, function(path) {
 									// File path
-									var oldFile = user.userId + "_" + selectRow.projectId + "/";
+									var oldFile = modules.config.paths.projects + user.userId + "_" + selectRow.projectId + "/";
 									oldFile += path;
 									var newFile = oldFile + name;
 									oldFile += selectRow.name;
 									
 									// Read
-									this.fs = require('fs');
-									this.fs.rename(modules.config.paths.projects + oldFile, modules.config.paths.projects + newFile, function (renameErr) {
+									controller.fileController.fs.rename(oldFile, modules.config.paths.projects + newFile, function (renameErr) {
 										if (renameErr) {
 											log("Failed to rename file", "err", "FileController.js");
 											console.log(renameErr);    
 										}
 										else {
-											log("Renamed file on drive successfully!", "info", "FileController.js");
+											log("Renamed file on drive successfully!", "debug", "FileController.js");
 											var msg = new modules.classes.Message();
 											msg.fromVal("project:renamed", {success: true, id: fileId, newName: name, isProject: false});
 											socket.sendMessage(client, msg);

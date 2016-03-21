@@ -14,5 +14,7 @@ module.exports = function(userController, fileController, projectController) {
     projectController.init();
 	
 	// Methods
-	this.init = function() {};
+	this.init = function() {
+		setInterval(controller.fileController.saveFile, modules.config.global.saveTime);		
+	};
 };

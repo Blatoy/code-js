@@ -40,6 +40,7 @@ function init() {
 	
 	// Create controller
 	global.controller = new modules.classes.Controller(new modules.classes.UserController(database, tables), new modules.classes.FileController(), new modules.classes.ProjectController());
+    global.controller.init();
    
     // Load cores
     log("Initializing core files", "debug");
