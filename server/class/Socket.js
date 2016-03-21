@@ -34,6 +34,9 @@ module.exports = function() {
 							break;
 					}
 					break;
+				case "editor":
+					cores.editor.handleMessage(message, client);
+					break;
 			}
 		} catch (e) {}
 	};

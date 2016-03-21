@@ -128,30 +128,124 @@ module.exports = function() {
 
     };
 	
+	// If parent id is project id -> then pass 0
     this.getFilePathFromParentId = function(parentId, callback) {
-        if(parentId < 1)
+        if(parentId < 1) {
             callback("");
+			return;
+		}
         this.getParentRecursively(parentId, "", 0, callback);
     };
+	
+	this.getFileContent = function(client, fileId) {
+		// Get user
+		var user = controller.userController.getUser(client);
+		
+		// Get file info
+		database.getSingle(
+            " SELECT " + tables.file.fields.name + " as 'name', " + tables.file.fields.parentFolderId + " as 'parentId', " +
+            tables.file.fields.projectId + " as 'projectId'" + 
+			" FROM " + tables.file.name + 
+            " WHERE " + tables.file.fields.id + " = ? ", [fileId],
+            function(err, row) {
+				if (err) {
+					log("Failed to get file information", "err", "FileController.js");
+                    console.log(err);                    
+                }
+                else {
+					log("Successfully got file information", "info", "FileController.js");
+					// Get file path
+					controller.fileController.getFilePathFromParentId(row.parentId, function(path) {
+						// File path
+						var filePath = user.userId + "_" + row.projectId + "/";
+						filePath += path;
+						filePath += row.name;
+						
+						// Read
+						this.fs = require('fs');
+						this.fs.readFile(modules.config.paths.projects + filePath, "utf8", function(error, data) {
+							if (error) {
+								log("Failed to read file content!", "err", "FileController.js");
+								console.log(error);
+								
+								// Send message
+								var msg = new modules.classes.Message();
+								msg.fromVal("editor:file-content", {success: false, content: "", projectId: row.projectId});
+								socket.sendMessage(user.client, msg);
+							}
+							else {
+								log("Successfully read file's content!", "info", "FileController.js");
+								
+								// Send message
+								var msg = new modules.classes.Message();
+								msg.fromVal("editor:file-content", {success: true, content: data, projectId: row.projectId});
+								socket.sendMessage(user.client, msg);
+							}
+						});
+					});
+				}
+		});		
+	};
     
 	this.rename = function(client, name, fileId) {
-		database.execPrep(
-			" UPDATE " + tables.file.name + 
-			" SET " + tables.file.fields.name + " = ?" +
-			" WHERE " + tables.file.fields.id + " = ?;", [name, fileId], 
-			function(err, row) {
-				if (err) {
-					log("Error at renaming file [id:" + fileId + "]", "err", "FileController.js");
-					console.log(err);
+		// Get user
+		var user = controller.userController.getUser(client);
+		
+		// Update
+		database.getSingle(
+			" SELECT " + tables.file.fields.name + " as 'name', " + tables.file.fields.parentFolderId + " as 'parentId', " +
+			tables.file.fields.projectId + " as 'projectId'" + 
+			" FROM " + tables.file.name + 
+			" WHERE " + tables.file.fields.id + " = ? ", [fileId],
+			function(selectErr, selectRow) {
+				if (selectErr) {
+					log("Failed to get file information", "err", "FileController.js");
+					console.log(selectErr);
 					var msg = new modules.classes.Message();
 					msg.fromVal("project:renamed", {success: false});
 					socket.sendMessage(client, msg);
 				}
 				else {
-					log("Successfully renamed file [id:" + fileId + "] into '" + name + "'", "info", "FileController.js");
-					var msg = new modules.classes.Message();
-					msg.fromVal("project:renamed", {success: true, id: fileId, newName: name, isProject: false});
-					socket.sendMessage(client, msg);
+					log("Successfully got file information", "info", "FileController.js");
+									
+					// Get file info
+					database.execPrep(
+						" UPDATE " + tables.file.name + 
+						" SET " + tables.file.fields.name + " = ?" +
+						" WHERE " + tables.file.fields.id + " = ?;", [name, fileId], 
+						function(updateErr, updateRow) {
+							if (updateErr) {
+								log("Error at renaming file [id:" + fileId + "]", "err", "FileController.js");
+								console.log(updateErr);                    
+							}
+							else {
+								log("Successfully renamed file [id:" + fileId + "] into '" + name + "'", "info", "FileController.js");
+								
+								// Get file path
+								controller.fileController.getFilePathFromParentId(selectRow.parentId, function(path) {
+									// File path
+									var oldFile = user.userId + "_" + selectRow.projectId + "/";
+									oldFile += path;
+									var newFile = oldFile + name;
+									oldFile += selectRow.name;
+									
+									// Read
+									this.fs = require('fs');
+									this.fs.rename(modules.config.paths.projects + oldFile, modules.config.paths.projects + newFile, function (renameErr) {
+										if (renameErr) {
+											log("Failed to rename file", "err", "FileController.js");
+											console.log(renameErr);    
+										}
+										else {
+											log("Renamed file on drive successfully!", "info", "FileController.js");
+											var msg = new modules.classes.Message();
+											msg.fromVal("project:renamed", {success: true, id: fileId, newName: name, isProject: false});
+											socket.sendMessage(client, msg);
+										}
+									});
+								});
+							}
+					});						
 				}
 			}
 		);
