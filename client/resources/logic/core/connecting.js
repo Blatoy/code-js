@@ -38,7 +38,7 @@ var Connecting = function(){
             $("#connection-information").text("Cannot reach the server.");
         else
             $("#connection-information").text("Connection lost.");
-            
+
         $("#selectIP").prop("disabled", false);
         $("#connect-button").prop("disabled", false);
         $("#connection-information").removeClass("blinking");

@@ -195,45 +195,63 @@ var projectManager = function() {
 				</ul>
 			</ul>-->
 	*/
-	this.treeRecursive = function(parentFolder, res, projectId, depth) {
+	
+	
+	this.setCurrentPath = function(projectId, parentFolder, folderName) {
+		var projectName;
+		for(var i = 0; i < this.projects.length; i++) {
+			if(this.projects[i].projectId == projectId) {
+				projectName = this.projects[i].projectName;
+			}
+		}
+		modules.projectManager.currentPath = [{folderId: projectId, name: projectName}];
+		
+		if(parentFolder != 0)
+			modules.projectManager.currentPath.push({folderId: parentFolder, name:folderName});
+		modules.projectManager.updatePath();
+	};
+	
+
+	this.treeRecursive = function(parentFolder, items, projectId, depth) {
 		for(var j = 0; j < this.files.length; j++) {
 			if(projectId != this.files[j].projectId)
 				continue;
-			
-			
+					
 			if(parentFolder == this.files[j].parentFolderId) {
 				if(this.files[j].isFolder) {
-					//res += "<ul>";
-					res += ("-").repeat(depth) + "<img style='width:20px;' src='resources/ui/images/folder.png' alt='Folder'/>" + this.files[j].name + "<br>";
-					/*var ul = $("<ul>") ;
-					fileImage.prop("alt", "Folder");
-					fileImage.prop("src", "resources/ui/images/folder.png");
-					file.append(fileImage);
-					file.append(modules.projectManager.files[j].name);
-*/					console.log(projectId);
-					modules.projectManager.treeRecursive(this.files[j].id, res, projectId, ++depth);
+					items.push(("<span class='tree-margin'></span>").repeat(depth) + "<span onclick='modules.projectManager.setCurrentPath(" + this.files[j].projectId + "," + this.files[j].id + ",\"" + this.files[j].name + "\")'><img style='width:20px;' src='resources/ui/images/folder.png' alt='Folder'/> " + this.files[j].name + "</span>");
+					modules.projectManager.treeRecursive(this.files[j].id, items, projectId, ++depth);
 				}
 				else {
-					console.log(depth);
-					res += ("-").repeat(depth) + "<img style='width:20px;' src='resources/ui/images/file.png' alt='File'/>" + this.files[j].name + "<br>";
-					/*fileImage.prop("alt", "File");
-					fileImage.prop("src", "resources/ui/images/file.png");
-					file.append(fileImage);
-					file.append(this.files[j].name);*/
-				//	res += "</ul>";
+					items.push(("<span class='tree-margin'></span>").repeat(depth) + "<span onclick='modules.projectManager.startEditor(" + this.files[j].id + ")'><img style='width:20px;' src='resources/ui/images/file.png' alt='File'/> " + this.files[j].name + "</span>");
 				}
 			}
-			
 		}
 
-		return res;
+		return items;
+	};
+	
+	this.startEditor = function(id) {
+		openedFiles.push(id);
+		changePage("editor", function(){
+			modules.editor.initCodeMirror();
+			modules.editor.loadStyles();
+			modules.editor.loadFile(id);
+		});
 	};
 	
 	this.updateTree = function() {
-		var textToAppend = "";
+		$("#file-structure").html("");
 		for(var i = 0; i < this.projects.length; i++) {
-			textToAppend += "<b>" + this.projects[i].projectName + "</b>";
-			textToAppend += this.treeRecursive(this.projects[i].projectId, "", this.projects[i].projectId, 1);
+			var items = [];
+			var textToAppend = "";
+			
+			textToAppend += "<b onclick='modules.projectManager.setCurrentPath("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+			items = this.treeRecursive(0, [], this.projects[i].projectId, 1);
+			
+			for(var j = 0; j < items.length; j++)
+				textToAppend += items[j] + "<br>";
+			
 			textToAppend += "<hr>";
 			$("#file-structure").append(textToAppend);
 		}
@@ -241,7 +259,8 @@ var projectManager = function() {
 	};
 	
 	this.createFile = function(isFolder) {
-		var parentID = modules.projectManager.currentPath.length == 0 ? -1 : modules.projectManager.currentPath[modules.projectManager.currentPath.length -1].folderId;
+		console.log("Current path length: " + modules.projectManager.currentPath.length);
+		var parentID = modules.projectManager.currentPath.length == 1 ? 0 : modules.projectManager.currentPath[modules.projectManager.currentPath.length -1].folderId;
 	
 		var msg = new Message();
 		msg.fromVal("project:add-file", {
@@ -336,9 +355,7 @@ var projectManager = function() {
                 modules.projectManager.updatePath();
             }
             else {
-                changePage("editor", function(){
-                    alert(id);
-                });
+                this.startEditor(id);
             }
 			// modules.projectManager.displayFiles();
 		});
@@ -372,6 +389,8 @@ var projectManager = function() {
             }
 			$("#file-history").html("");
 		}
+		
+		this.updateTree();
 	};
   
     // Refresh the userlist on add project dialog
@@ -466,6 +485,7 @@ var projectManager = function() {
             case "file-list":
 				for (var i = 0; i < message.data.length; i++)
 					this.files.push(message.data[i]);
+				this.updateTree();
                 break;
 			case "all-users":
                 createProjectUserList = message.data;
@@ -477,6 +497,7 @@ var projectManager = function() {
                     $(".dialog-box").remove(); 
                   //  {success: true, fileName: name, parentId: parentId, isFolder: isFolder,permissionLevel: row.permissionLevel});
                     this.files.push(message.data);
+					console.log(message.data);
                     this.displayContent();
                 }
                 else {

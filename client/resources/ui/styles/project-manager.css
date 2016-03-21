@@ -149,6 +149,10 @@
 	border-right: 1px solid #e3e3e3;
 	width: 220px;
 	font-family: Tahoma, Geneva, sans-serif;
+	overflow:hidden;
+	overflow-y: auto;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .tree {
@@ -342,6 +346,13 @@
     height: 260px;
     padding-right: 10px;
     margin-bottom: 20px;
+}
+
+.tree-margin {
+	display: inline-block;
+	margin-left: 30px;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
 
 #create-project-users {

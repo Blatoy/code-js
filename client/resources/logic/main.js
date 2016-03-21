@@ -8,6 +8,7 @@ var selfUser = {};
 var modules = {};
 var currentPage;
 var isServerReady = false;
+var openedFiles = [];
 // Save the mouse position
 var mouse = {x: 0, y:0};
 // Prevent the display of multiple context menu
@@ -27,8 +28,11 @@ function init() {
             $.getScript(CONFIG_PATHS["class"] + "Socket.js");
             $.getScript(CONFIG_PATHS["class"] + "ContextMenu.js");
             $.getScript(CONFIG_PATHS["class"] + "DialogBox.js");
+			
             $.getScript(CONFIG_PATHS["tools"] + "jquery-2.1.4.min.js");
-            
+            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.12/lib/codemirror.js");
+            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.12/mode/javascript/javascript.js");
+ 
             // Change the page connecting when the file is loaded
             $.getScript(CONFIG_PATHS["core"] + "connecting.js", function(){
 				modules.connecting = new Connecting();
@@ -38,8 +42,8 @@ function init() {
             });
             
             $.getScript(CONFIG_PATHS["core"] + "editor.js", function(){
-               /* modules.editor = new Editor();
-               modules.editor.init();*/
+				modules.editor = new Editor();
+				modules.editor.init();
             });
             
             $.getScript(CONFIG_PATHS["core"] + "login.js", function(){
@@ -127,18 +131,6 @@ function changePage(fileName, callBack) {
 	$("#content").load(CONFIG_PATHS["pages"] + fileName + ".html #page-content", onLoadFinished);
 
     currentPage = fileName;
-	
-    // TODO: Move to loadStyle([]); when needed
-	/*$.getScript(CONFIG_PATHS["core"] + fileName + ".js", onLoadFinished);
-	if (fileName == "editor") {
-		$("head").append('<script src="'+CONFIG_PATHS["tools"]+'codemirror-5.12/lib/codemirror.js"></script>');
-		$("head").append('<script src="'+CONFIG_PATHS["core"]+'editor.js"></script>');
-		$("head").append('<script src="'+CONFIG_PATHS["tools"]+'codemirror-5.12/mode/javascript/javascript.js"></script>');
-		$("head").append('<link rel="stylesheet" href="'+CONFIG_PATHS["tools"]+'codemirror-5.12/lib/codemirror.css" type="text/css" />');
-		$("head").append('<link rel="stylesheet" href="'+CONFIG_PATHS["tools"]+'codemirror-5.12/theme/3024-day.css" type="text/css" />');
-	}
-	
-    */
 }
 
 // Update the mouse position
