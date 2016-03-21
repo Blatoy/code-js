@@ -30,8 +30,8 @@ function init() {
             $.getScript(CONFIG_PATHS["class"] + "DialogBox.js");
 			
             $.getScript(CONFIG_PATHS["tools"] + "jquery-2.1.4.min.js");
-            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.12/lib/codemirror.js");
-            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.12/mode/javascript/javascript.js");
+            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.13/lib/codemirror.js");
+            $.getScript(CONFIG_PATHS["tools"] + "codemirror-5.13/mode/javascript/javascript.js");
  
             // Change the page connecting when the file is loaded
             $.getScript(CONFIG_PATHS["core"] + "connecting.js", function(){

@@ -60,6 +60,8 @@ var Socket = function() {
 			case "project":
                 modules.projectManager.handleMessage(msg);
                 break;
+			case "editor":
+				break;
             case "global":
                 switch(msg.type) {
                     case "ping":
@@ -69,6 +71,9 @@ var Socket = function() {
                         break;
                 }
                 break;
+			default:
+				console.log("Handlemessage: target:xx not defined.")
+				break;
 		}
 	};
 	

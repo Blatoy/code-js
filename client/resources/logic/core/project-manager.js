@@ -235,7 +235,6 @@ var projectManager = function() {
 		openedFiles.push(id);
 		changePage("editor", function(){
 			modules.editor.initCodeMirror();
-			modules.editor.loadStyles();
 			modules.editor.loadFile(id);
 		});
 	};
