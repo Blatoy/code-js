@@ -22,7 +22,8 @@ var Editor = function(){
 	this.handleMessage = function(message) {
 			switch(message.type) {
 				case "file-content":
-					this.codeMirror.setValue(message.data.content);
+					modules.editor.codeMirror.setValue(message.data.content);
+					console.log(modules.editor);
 					break;
 			}
 	};

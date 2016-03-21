@@ -22,65 +22,6 @@ body {
 } 
 */
 
-#menu {
-	margin-left: 50px;
-	display:inline-block;
-	vertical-align: middle;
-}
-
-.menu-elements {
-	display: inline-block;
-	padding: 5px;
-}
-.menu-elements:hover {
-	background-color: #eee;
-	cursor: pointer;
-	border-radius: 2px;
-}
-
-#menu-files {
-	visibility: hidden;
-	position: fixed;
-	top: 45px;
-	left: 270px;
-	width: 100px;
-	height: 200px;
-	border: 1px solid #eee;
-	border-radius: 2px;
-	background-color: white;
-}
-
-.menu-files-elements {
-	display: block;
-	padding: 3px;
-}
-.menu-files-elements:hover {
-	background-color: #eee;
-	cursor: pointer;
-	border-radius: 2px;
-}
-
-#menu-edition {
-	visibility: hidden;
-	position: fixed;
-	top: 45px;
-	left: 314px;
-	width: 100px;
-	height: 170px;
-	border: 1px solid #eee;
-	border-radius: 2px;
-	background-color: white;
-}
-
-.menu-edition-elements {
-	display: block;
-	padding: 3px;
-}
-.menu-edition-elements:hover {
-	background-color: #eee;
-	cursor: pointer;
-	border-radius: 2px;
-}
 
 #tools {
 	display: block;
@@ -104,7 +45,6 @@ body {
 	margin-top: 2px;
 	margin-left: 2px;
 	padding-bottom: 1px;
-	border-bottom: 1px solid #dedede;
 }
 
 .tab-elements {
@@ -136,20 +76,22 @@ body {
 
 /*    Code-Mirror  */
 #code-mirror {
-	width: 100%;
-	height: 100%;
+	width: calc(100% - 225px);
 	position: fixed;
-	top: 180px;
-	left: 220px;
-	background-color: none;
+	top: 151px;
+	left: 221px;
+	height: 100%;
+	bottom: 0;
 }
 
 #mirror-textarea {
+	height: 100%;
 	width: 100%;
-	height: 1000px;
-	background-color: none;
 }
 
+.CodeMirror {
+	height: calc(100% - 150px);
+}
 
 /*	--------------------------- FILE STRUCTURE ----------------------------*/
 
