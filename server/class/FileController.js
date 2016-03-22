@@ -206,7 +206,7 @@ module.exports = function() {
 		});		
 	};
 	
-	this.addCharToFile = function(client, fileId, pos, value) {
+	this.addCharToFile = function(client, fileId, pos, value, line, ch) {
 		for (var i = 0; i < controller.fileController.files.length; i++) {
 			if (controller.fileController.files[i].id == fileId) {
 				// Modifying content
@@ -215,15 +215,16 @@ module.exports = function() {
 				
 				// Send message
 				var msg = new modules.classes.Message();
-				msg.fromVal("editor:add-content", {success: true, fileId: fileId, pos: pos, value: value});
+				msg.fromVal("editor:add-content", {success: true, fileId: fileId, pos: pos, value: value, line: line, ch: ch});
 				for (var j = 0; j < controller.fileController.files[i].userlist.length; j++) {
-					socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
+					if(controller.fileController.files[i].userlist[j].client != client)
+						socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
 				}
 			}
 		}
 	};
 	
-	this.removeCharFromFile = function(client, fileId, pos, length) {
+	this.removeCharFromFile = function(client, fileId, pos, length, lineFrom, chFrom, lineTo, chTo) {
 		for (var i = 0; i < controller.fileController.files.length; i++) {
 			if (controller.fileController.files[i].id == fileId) {
 				// Modifying content
@@ -232,9 +233,10 @@ module.exports = function() {
 				
 				// Send message
 				var msg = new modules.classes.Message();
-				msg.fromVal("editor:remove-content", {success: true, fileId: fileId, pos: pos, length: length});
+				msg.fromVal("editor:remove-content", {success: true, fileId: fileId, pos: pos, length: length, lineFrom: lineFrom, chFrom: chFrom, lineTo: lineTo, chTo: chTo});
 				for (var j = 0; j < controller.fileController.files[i].userlist.length; j++) {
-					socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
+					if(controller.fileController.files[i].userlist[j].client != client)
+						socket.sendMessage(controller.fileController.files[i].userlist[j].client, msg);					
 				}
 			}
 		}

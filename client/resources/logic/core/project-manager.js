@@ -58,7 +58,7 @@ var projectManager = function() {
         this.updatePath();
 	};
 	
-    this.updatePath = function() {
+    this.updatePath = function(hideContent) {
         $("#path").html("");
         
         // Add root
@@ -93,7 +93,8 @@ var projectManager = function() {
         }
         
         // Update the file list
-        modules.projectManager.displayContent();
+		if(!hideContent)
+			modules.projectManager.displayContent();
     };
 	
 	this.addFile = function() {
