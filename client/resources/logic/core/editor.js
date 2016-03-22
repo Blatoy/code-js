@@ -20,6 +20,7 @@ var Editor = function(){
 			theme: "eclipse",
 		});
 		
+		$("#user-information").text(selfUser.username);
 		modules.projectManager.updateTree(true);
 	};
 	

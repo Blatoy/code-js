@@ -4,18 +4,32 @@ var projectManager = function() {
     var createContextMenu = new ContextMenu();
     var manageContextMenu = new ContextMenu();
     var createProjectUserList = [];
+	
 	this.projects = [];
     this.files = [];
+
 	// Michael: Doing some tests
 	var clickedItem;
     
-	this.init = function() {
+	this.reset = function() {
+		createContextMenu = new ContextMenu();
+		manageContextMenu = new ContextMenu();
+
+		this.currentPath = [];
+		this.projects = [];
+		this.files = [];
+		this.init();
+	};
+	
+	this.init = function(fromReset) {
         // Get the project list
         // TODO: Store the projects
 		var msg = new Message();
 		msg.fromVal("project:get-projects");
 		modules.socket.sendMessage(msg);
         
+		$("#user-information").text(selfUser.username);
+		
         // Add context menu items
         // createContextMenu.addItem("New file", function(){$("#file-content").append($("#file-content").html())});
 		createContextMenu.addItem("New file", function(){modules.projectManager.addFile();});
@@ -32,28 +46,29 @@ var projectManager = function() {
 		manageContextMenu.addItem("New folder", function(){modules.projectManager.addFolder();});
         manageContextMenu.addItem("New project", function(){modules.projectManager.addProject();});
         
-        
-        // Display all context menu
-        $("#file-content").on("contextmenu", function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            if(modules.projectManager.currentPath.length == 0) {
-                createContextMenu.hideItem(0);
-                createContextMenu.hideItem(1);
-            }
-            else {
-                createContextMenu.showItem(0);
-                createContextMenu.showItem(1);
-            }
-            createContextMenu.display(mouse.x, mouse.y);
-        });
-        
-        $("#tool-box-new-file").on("click", function(e) {
-            // Prevent instant closing
-            setTimeout(function(){
-                createContextMenu.display(mouse.x, mouse.y);
-            }, 1);
-        });
+		if(!fromReset) {        
+			// Display all context menu
+			$("#file-content").on("contextmenu", function(e){
+				e.preventDefault();
+				e.stopPropagation();
+				if(modules.projectManager.currentPath.length == 0) {
+					createContextMenu.hideItem(0);
+					createContextMenu.hideItem(1);
+				}
+				else {
+					createContextMenu.showItem(0);
+					createContextMenu.showItem(1);
+				}
+				createContextMenu.display(mouse.x, mouse.y);
+			});
+			
+			$("#tool-box-new-file").on("click", function(e) {
+				// Prevent instant closing
+				setTimeout(function(){
+					createContextMenu.display(mouse.x, mouse.y);
+				}, 1);
+			});
+		};
         
         this.updatePath();
 	};

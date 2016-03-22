@@ -1,26 +1,22 @@
 <div id="page-header">
-	<!--<div id="menu-files">
-		<div class="menu-files-elements">New</div>
-		<div class="menu-files-elements">Open</div>
-		<div class="menu-files-elements">Rename</div>
-		<div class="menu-files-elements">Close</div>
-		<div class="menu-files-elements">Close All</div>
-		<div class="menu-files-elements">Delete</div>
-		<div class="menu-files-elements">Exit</div>
+	<div id="search-bar">
+		<input type="text" id="search" onkeyup="modules.projectManager.displayContent()" placeholder="Search"/>
 	</div>
-	<div id="menu-edition">
-		<div class="menu-edition-elements">Undo</div>
-		<div class="menu-edition-elements">Redo</div>
-		<div class="menu-edition-elements">Delete</div>
-		<div class="menu-edition-elements">Select All</div>
-		<div class="menu-edition-elements">Search</div>
-		<div class="menu-edition-elements">Replace</div>
-	</div>-->
-	
-	<!--<div id="tab">
-		<div class="tab-elements">main.cpp<img class="tab-elements-close" src="resources/ui/images/path-arrow.svg" alt="Close" /></div>
-		<div class="tab-elements">scene.cpp<img class="tab-elements-close" src="resources/ui/images/path-arrow.svg" alt="Close" /></div>
-	</div>-->
+    <div id="path">
+        <!--<div class="path-project">Project /</div>
+        <div class="path-folder">Folder 1 /</div>
+        <div class="path-folder">Folder 2 /</div>
+        <div class="path-folder">Folder 3</div>-->
+    </div>
+    <div id="tool-box">
+        <div onclick="changePage('project-manager', function(){modules.projectManager.reset();});" style="margin-right: 80px;" class="inline tool-box-item" id="tool-box-new-file">Go back</div>
+        <div onclick="window.location.reload()" class="inline tool-box-item" id="tool-box-new-file">Log out</div>
+        <div class="inline tool-box-item"><b><span id="user-information">Username...</div></b></div>
+        <!--<div class="inline tool-box-item" id="tool-box-rename">Refresh</div>
+        <div class="inline tool-box-item" id="tool-box-rename">Rename</div>
+        <div class="inline tool-box-item" id="tool-box-move">Move</div>
+        <div class="inline tool-box-item" id="tool-box-delete">Delete</div>-->
+    </div>
 </div>
 
 <div id="page-content">		
