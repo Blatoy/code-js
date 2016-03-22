@@ -11,6 +11,5 @@ module.exports = {
     signupEnabled: true,
     serverName: "Test server",
     debug: true,
-    version: 0.1
-	
+    version: 1.0	
 }
