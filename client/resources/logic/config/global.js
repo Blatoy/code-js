@@ -1,7 +1,7 @@
 var CONFIG_GLOBAL = {};
 
-CONFIG_GLOBAL.debugEnabled = true;
-CONFIG_GLOBAL.debugServer = "localhost";
-CONFIG_GLOBAL.debugUser = "Blatoy";
-CONFIG_GLOBAL.debugPass = "1232";
-CONFIG_GLOBAL.clientVersion = "0.2";
+CONFIG_GLOBAL.debugEnabled = false;
+CONFIG_GLOBAL.debugServer = "";
+CONFIG_GLOBAL.debugUser   = "";
+CONFIG_GLOBAL.debugPass   = "";
+CONFIG_GLOBAL.clientVersion = "1.0";
