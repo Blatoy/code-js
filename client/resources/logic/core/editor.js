@@ -17,14 +17,12 @@ var Editor = function(){
 			mode: "text/javascript",
 			theme: "eclipse",
 		});
-		
-		this.codeMirror.on("change", function(mirror, e){modules.editor.handleTextChange(mirror, e)});
 	};
 	
 	this.handleTextChange = function(mirror, e) {
 		var index = 0;
 		for(var i = 0; i < e.from.line; i++) {
-			index += modules.editor.codeMirror.getLine(i).length + 4;
+			index += modules.editor.codeMirror.getLine(i).length + 2;
 		}
 		
 		index += e.from.ch;
@@ -32,9 +30,9 @@ var Editor = function(){
 		var textRemovedLength = 0;
 		for(var i = 0; i < e.removed.length; i++) {
 			textRemovedLength += e.removed[i].length;
-			/*if(i + 1 < e.removed.length) {
-				textRemovedLength -= 2;
-			}*/
+			if(i + 1 < e.removed.length) {
+				textRemovedLength += 2;
+			}
 		}
 
 		var textAdded = "";
@@ -44,11 +42,9 @@ var Editor = function(){
 			if(i + 1 < e.text.length) {
 				textAdded += "\r\n";
 			}
-		}
-		
+		}		
 		
 		if(textRemovedLength > 0) {
-			index -= e.from.line + 1;
 			console.log(textRemovedLength + " - " + index);
 			var remMsg = new Message();
 			remMsg.fromVal("editor:remove-content", {fileId: openedFiles[openedFileIndex], pos: index, length: textRemovedLength});
@@ -60,19 +56,14 @@ var Editor = function(){
 			addMsg.fromVal("editor:add-content", {fileId: openedFiles[openedFileIndex], pos: index, value: textAdded});
 			modules.socket.sendMessage(addMsg);
 		}
-
-		//console.log(e.from);
-	};
-	
-	this.removeCharacter = function() {
-		
 	};
 	
 	this.handleMessage = function(message) {
-			switch(message.type) {
-				case "file-content":
-					modules.editor.codeMirror.setValue(message.data.content);
-					break;
-			}
+		switch(message.type) {
+			case "file-content":
+				modules.editor.codeMirror.setValue(message.data.content);
+				this.codeMirror.on("change", function(mirror, e){modules.editor.handleTextChange(mirror, e)});
+				break;
+		}
 	};
 };

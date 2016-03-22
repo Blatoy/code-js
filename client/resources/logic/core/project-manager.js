@@ -157,45 +157,7 @@ var projectManager = function() {
                 
             $(e.target).toggleClass("user-selected");
         }
-    };
-	
-	
-	/*
-	<!--<ul class="tree">
-			<li class="tree-project">Loading...</li>
-			<!--<li class="tree-project">Project Helios</li>
-			<ul>
-				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>main.cpp</li>
-				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>scene.cpp</li>
-				<li>
-					<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Images</li>
-					<ul>
-						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>sun.jpg</li>
-						<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>earth.jpg</li>
-						<li>
-							<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>Sounds-mp333333333333333</li>
-							<ul>
-								<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
-                                <li>
-                                    <ul>
-                                        <li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>space.mp3</li>
-                                    </ul>
-                                </li>
-                            </ul>
-						</li>
-					</ul>
-				</li>
-			</ul>
-			<li class="tree-project">Project Coord Tracker</li>
-			<ul>
-				<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>manifest.xml</li>
-				<li class="tree-file"><img alt="img" src="resources/ui/images/folder.png"/>res</li>
-				<ul>
-					<li class="tree-file"><img alt="img" src="resources/ui/images/file.png"/>MainActivity.java</li>
-				</ul>
-			</ul>-->
-	*/
-	
+    };	
 	
 	this.setCurrentPath = function(projectId, parentFolder, folderName) {
 		var projectName;
@@ -209,8 +171,7 @@ var projectManager = function() {
 		if(parentFolder != 0)
 			modules.projectManager.currentPath.push({folderId: parentFolder, name:folderName});
 		modules.projectManager.updatePath();
-	};
-	
+	};	
 
 	this.treeRecursive = function(parentFolder, items, projectId, depth) {
 		for(var j = 0; j < this.files.length; j++) {

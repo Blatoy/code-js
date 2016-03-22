@@ -210,11 +210,8 @@ module.exports = function() {
 		for (var i = 0; i < controller.fileController.files.length; i++) {
 			if (controller.fileController.files[i].id == fileId) {
 				// Modifying content
-				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + value + controller.fileController.files[i].content.substr(pos + value.length, controller.fileController.files[i].content.length);
+				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + value + controller.fileController.files[i].content.substr(pos, controller.fileController.files[i].content.length);
 				controller.fileController.files[i].isModified = true;
-				
-				console.log(pos);
-				console.log("'" + controller.fileController.files[i].content + "'");
 				
 				// Send message
 				var msg = new modules.classes.Message();
@@ -232,8 +229,7 @@ module.exports = function() {
 				// Modifying content
 				controller.fileController.files[i].content = controller.fileController.files[i].content.substr(0, pos) + controller.fileController.files[i].content.substr(pos + length, controller.fileController.files[i].content.length);
 				controller.fileController.files[i].isModified = true;
-								console.log(pos);
-				console.log("'" + controller.fileController.files[i].content + "'");
+				
 				// Send message
 				var msg = new modules.classes.Message();
 				msg.fromVal("editor:remove-content", {success: true, fileId: fileId, pos: pos, length: length});
@@ -249,12 +245,19 @@ module.exports = function() {
 			if (controller.fileController.files[i].isModified) {
 				(function(file){
 					controller.fileController.getFilePathFromFileId(file.id, function(filePath) {
-						controller.fileController.fs.writeFile(filePath, file.content, function (writeErr) {
-							if (writeErr) {
-								log("Failed to write file content", "err", "FileController.js");
+						controller.fileController.fs.writeFile(filePath, "", function (clearErr) {
+							if (clearErr) {
+								log("Failed to clean file content", "err", "FileController.js");
 							}
 							else {
-								file.isModified = false;
+								controller.fileController.fs.writeFile(filePath, file.content, function (writeErr) {
+									if (writeErr) {
+										log("Failed to write file content", "err", "FileController.js");
+									}
+									else {
+										file.isModified = false;
+									}
+								});								
 							}
 						});
 					});
