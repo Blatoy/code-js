@@ -4,6 +4,8 @@
 var Login = function(){
 	this.init = function() {
 		$("#login-button").on("click", this.login);
+        // Temporary line
+        this.login();
 		$("#login-sign-up").on("click", this.toggleSignUp);
 		$("#repeat-password-area").toggle();
         $("#login-username").focus();
@@ -41,7 +43,8 @@ var Login = function(){
 		if($("#repeat-password-area").is(':visible'))
 			msg.fromVal("login:create-account", {pass: $("#login-password").val(), username: $("#login-username").val()});
 		else
-			msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
+			// msg.fromVal("login:login", {pass: $("#login-password").val(), username: $("#login-username").val()});
+            msg.fromVal("login:login", {pass: "cool", username: "McMichael"});
 		modules.socket.sendMessage(msg);
 	};
 	

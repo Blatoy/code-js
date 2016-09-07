@@ -1,6 +1,8 @@
 var Connecting = function(){
 	this.init = function() {
 		$("#connect-button").on("click", this.connect);
+        // Temporary lines
+        this.connect();
 		$("#selectIP").focus();
         $("#selectIP").select();
         $("#selectIP").val(CONFIG_SERVER["DEFAULT_IP"]);
@@ -17,8 +19,8 @@ var Connecting = function(){
     };
 	
 	this.connect = function() {
-		CONFIG_SERVER["DEFAULT_IP"] = $("#selectIP").val();
-
+		// CONFIG_SERVER["DEFAULT_IP"] = $("#selectIP").val();
+        CONFIG_SERVER["DEFAULT_IP"] = "127.0.0.1";  // Temporary
 		modules.socket = new Socket();
 		modules.socket.init();
 		modules.socket.ws.onmessage = function(msg){modules.socket.handleMessage(msg)};

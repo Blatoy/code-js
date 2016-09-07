@@ -176,4 +176,38 @@ module.exports = function() {
 		user.client.close();*/
 		this.users.splice(this.users.indexOf(user), 1);
 	};
+    
+    this.getHistory = function(client) {
+        var user = this.getUser(client);
+        database.getSingle(
+            " SELECT " + tables.file.fields.name + " as 'fileName', " +
+             tables.file.fields.creationDate + " as 'creationDate', " + 
+             tables.project.fields.name + " as 'projectName' " +
+            " FROM " + tables.file.name + " LEFT JOIN " + tables.project.name + " ON " +
+             tables.file.fields.projectId + " = " + tables.project.fields.id +
+            " WHERE " + tables.file.fields.creationUserId + " = ? " + 
+            " ORDER BY " + tables.file.fields.creationDate + " DESC;", [user.id],
+            function(err, row) {
+				if (err)
+					log("Failed to get user history.", "err", "UserController.js");
+
+                if (row) {
+					var data = [];
+					var msg = new modules.classes.Message();
+                    
+					data.push({fileName: row.fileName, creationDate: row.creationDate, projectName: row.projectName});
+                    
+					log("Success got user history", "debug", "UserController.js");
+					
+					if (client != null) {
+						msg.fromVal("user-history", data);
+						socket.sendMessage(client, msg);
+					}
+					else {
+						return data;
+					}
+                }
+            }
+        );
+    }
 };

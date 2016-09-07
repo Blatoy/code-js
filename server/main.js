@@ -48,13 +48,6 @@ function init() {
     global.cores.editor = new modules.core.editor();
     global.cores.projectManager = new modules.core.projectManager();
     
-	/*database.queryPrep("SELECT * FROM user WHERE Username = ?;", [['michael']], function(err, row) {
-		if (err)
-			console.log(err);
-		else
-			console.log(row);
-	});*/
-    
     var inputHandler = new modules.classes.InputHandler();
 			
 	// Websocket

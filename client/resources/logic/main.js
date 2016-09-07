@@ -15,7 +15,6 @@ var mouse = {x: 0, y:0};
 // Prevent the display of multiple context menu
 var contextMenuLocked = false;
 
-
 function init() {
 	// Include the paths config
 	$.getScript("resources/logic/config/paths.js", function() {

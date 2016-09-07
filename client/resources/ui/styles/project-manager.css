@@ -148,11 +148,13 @@
 	top: 151px;
 	border-right: 1px solid #e3e3e3;
 	width: 220px;
-	font-family: Tahoma, Geneva, sans-serif;
-	overflow:hidden;
+    font-family: Helvetica, Tahoma, sans-serif;
+	overflow: hidden;
 	overflow-y: auto;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+    padding: 2px;
+    padding-left: 4px;
 }
 
 .tree {
@@ -180,7 +182,6 @@
 	white-space: nowrap;
 	overflow: hidden;
 	padding: 2px;
-
 }
 
 .tree-file img {

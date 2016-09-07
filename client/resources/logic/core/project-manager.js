@@ -7,6 +7,8 @@ var projectManager = function() {
 	
 	this.projects = [];
     this.files = [];
+    
+    this.historyMsgs = [];
 
 	// Michael: Doing some tests
 	var clickedItem;
@@ -31,12 +33,9 @@ var projectManager = function() {
 		$("#user-information").text(selfUser.username);
 		
         // Add context menu items
-        // createContextMenu.addItem("New file", function(){$("#file-content").append($("#file-content").html())});
 		createContextMenu.addItem("New file", function(){modules.projectManager.addFile();});
 		createContextMenu.addItem("New folder", function(){modules.projectManager.addFolder();});
-        createContextMenu.addItem("New project", function(){modules.projectManager.addProject();});
-      
-
+        createContextMenu.addItem("New project", function(){modules.projectManager.addProject();}); 
       
         // TODO: Check on how to get the item ID
         manageContextMenu.addItem("Rename", function(){modules.projectManager.openRenameDialog();});
@@ -224,10 +223,10 @@ var projectManager = function() {
 			var items = [];
 			var textToAppend = "";
 			
-			if(fromEditor)
-				textToAppend += "<b onclick='modules.projectManager.setCurrentPath("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+			if (fromEditor)
+				textToAppend += "<b onclick='modules.projectManager.setCurrentPath(" + this.projects[i].projectId + ", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
 			else
-				textToAppend += "<b onclick='modules.projectManager.startEditor("+this.projects[i].projectId+", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
+				textToAppend += "<b onclick='modules.projectManager.startEditor(" + this.projects[i].projectId + ", 0, \"\")'>" + this.projects[i].projectName + "</b><br>";
 				
 			items = this.treeRecursive(0, [], this.projects[i].projectId, 1);
 			
@@ -347,7 +346,9 @@ var projectManager = function() {
     
 	this.displayContent = function() {
 		if(this.projects.length == 0) {
-			// $("#file-content").text("There's nothing here.");
+			$("#file-content").text("There's nothing here.");
+            $("#file-structure").html("Empty"); // ?
+            $("#file-history").text("DB is crap, no record!");
 		}
 		else {
 			$("#file-content").html("");
@@ -369,11 +370,19 @@ var projectManager = function() {
                     }
                 }
             }
-			$("#file-history").html("");
 		}
 		
 		this.updateTree();
 	};
+    
+    this.displayHistory = function() {
+        // Display history
+		$("#file-history").html("");
+        
+        for (var i = 0; i < historyMsgs.length(); i++) {
+            // $("#file-history").append();
+        }
+    };
   
     // Refresh the userlist on add project dialog
 	this.refreshCreateProjectUserList = function() {
@@ -542,6 +551,10 @@ var projectManager = function() {
                             break;
                     }
                 }
+                break;
+            case "user-history":
+                this.historyMsgs = message.data;
+                this.displayHistory();
                 break;
 		}
 	};

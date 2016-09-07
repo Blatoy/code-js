@@ -5,7 +5,10 @@ module.exports = function() {
     this.handleMessage = function(message, client) {
         switch(message.type) {
 			case "get-projects":
+                // Get project list
 				controller.projectController.getProjectList(client);
+                // Get user activity
+                controller.userController.getHistory(client);
 				break;
 			case "get-all-users":
 				controller.userController.getAllUsers(client);
